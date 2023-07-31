@@ -1,0 +1,245 @@
+<apex:page controller="PrintStatementController" contentType="text/html" showHeader="false" applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    </html>
+    <head>
+        <style>
+            @page{
+                size: A4;
+            }
+            body{
+                font-size: 11px;
+            }
+            table td{
+                height: 8px;
+                
+            }
+            table.bill th,table.bill td,table.bill tr{
+                border: 1px solid black;
+            }
+            table.shipment th,td,tr{
+                border: none;
+            }
+            .bold{
+                font-weight: bold;
+            }           
+        </style>
+        <script type="text/javascript">       
+            window.onload = setTimeout(() => {
+                window.print();
+            }, 1000);
+        </script>
+    </head>
+    <body>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div style="text-align: center;font-size: 20px;font-weight: bold;">
+            <apex:outputText value="STATEMENT" />
+        </div>
+        <br/>
+        <br/>
+        <div>
+            <table class="shipment" style="border-collapse: collapse;width: 100%;">
+                <col width="40%" />
+                <col width="20%" />
+                <col width="20%" />
+                <col width="20%" />
+                <tr>
+                    <td colspan="2"></td>
+                    <td>
+                        <apex:outputText value="DATE:" />
+                    </td>
+                    <td>
+                        <apex:outputText value="{0,date,dd-MMM-yyyy}">
+                            <apex:param value="{!soa.Date__c}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td>
+                        <apex:outputText value="STATEMENT:" />
+                    </td>
+                    <td>
+                        <apex:outputText value="{!soa.Statement__c}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                </tr>
+                <tr>
+                    <th>
+                        <apex:outputText value="BILL TO:" />
+                    </th>
+                    <td></td>
+                    <th colspan="2">
+                        <apex:outputText value="ACCOUNT SUMMARY" />
+                    </th>
+                </tr>
+                <tr>
+                    <td rowspan="4" style="vertical-align: top;">
+                        <apex:outputField value="{!soa.Bill_to_details_info__c}" />
+                    </td>
+                    <td></td>
+                    <td>
+                        <apex:outputText value="PREVIOUS BALANCE" />
+                    </td>
+                    <td style="text-align: right;">
+                        <apex:outputText value="$" style="padding-right: 90px;" />
+                        <apex:outputText value="{0,number,###,###,##0.00}">
+                            <apex:param value="{!totalPreBalance}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <apex:outputText value="CREDIT" />
+                    </td>
+                    <td style="text-align: right;">
+                        <apex:outputText value="$" style="padding-right: 90px;" />
+                        <apex:outputText value="{0,number,###,###,##0.00}">
+                            <apex:param value="{!totalCredit}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <apex:outputText value="DEBIT" />
+                    </td>
+                    <td>
+                        <apex:outputText value="$" style="padding-right: 90px;" />
+                        <apex:outputText value="{0,number,###,###,##0.00}">
+                            <apex:param value="{!totalDebit}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <th>
+                        <apex:outputText value="TOTAL BALANCE" />
+                    </th>
+                    <td style=" text-align: right;">
+                        <apex:outputText value="$" style="padding-right: 90px;" />
+                        <apex:outputText value="{0,number,###,###,##0.00}">
+                            <apex:param value="{!total}" />
+                        </apex:outputText>
+                    </td>
+                </tr>
+            </table>
+            <br/>
+            <br/>
+            <table class="bill" style="border-collapse: collapse;width: 100%;">
+                <col width="5%" />
+                <col width="10%" />
+                <col width="10%" />
+                <col width="10%" />
+                <col width="20%" />
+                <col width="15%" />
+                <col width="15%" />
+                <col width="15%" />
+                <tr style="text-align: center; ">
+                    <th>
+                        <apex:outputText value="NO." />
+                    </th>
+                    <th>
+                        <apex:outputText value="DATE" />
+                    </th>
+                    <th>
+                        <apex:outputText value="REF Nº" />
+                    </th>
+                    <th>
+                        <apex:outputText value="FILE" />
+                    </th>
+                    <th>
+                        <apex:outputText value="DESCRIPTION" />
+                    </th>
+                    <th>
+                        <apex:outputText value="DEBIT" />
+                    </th>
+                    <th>
+                        <apex:outputText value="CREDIT" />
+                    </th>
+                    <th>
+                        <apex:outputText value="BALANCE" />
+                    </th>
+                </tr>
+                <apex:variable value="{!0}" var="count">
+                    <apex:repeat value="{!lstSoaBill}" var="bill">
+                        <apex:variable value="{!count+1}" var="count">
+                            <tr>
+                                <td>
+                                    <apex:outputText value="{!count}" style="text-align: center;" />
+                                </td>
+                                <td>
+                                    <apex:outputText value="{0,date,dd-MMM-yyyy}" style="float:left;">
+                                        <apex:param value="{!bill.F_TMS_Bill__r.clofor_com_cfs__SalesAccountedDateInvoicing__c}" />
+                                    </apex:outputText>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!bill.F_TMS_Bill__r.Name}" style="float:left;" />
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!bill.F_TMS_Bill__r.clofor_com_cfs__Anken__r.clofor_com_cfs__JobRequestID__c}" style="float:left;"
+                                    />
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <apex:outputText value="$" style="float:left; padding-left: 5px;" />
+                                    <apex:outputText value="{0,number,###,###,##0.00}" style="float:right;">
+                                        <apex:param value="{!bill.F_TMS_Bill__r.clofor_com_cfs__SellInTaxAmount_USD__c}" />
+                                    </apex:outputText>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <apex:outputText value="$" style="float:left; padding-left: 5px;" />
+                                    <apex:outputText value="{0,number,###,###,##0.00}" style="float:right;">
+                                        <apex:param value="{!bill.F_TMS_Bill__r.clofor_com_cfs__SellInTaxAmount_USD__c}" />
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                        </apex:variable>
+                    </apex:repeat>
+                </apex:variable>
+                <tr style="">
+                    <th colspan="7">
+                        <apex:outputText value="CURRENT BALANCE" style="float:right;" />
+                    </th>
+                    <th>
+                        <apex:outputText value="$" style="float:left; padding-left: 5px;" />
+                        <apex:outputText value="{0,number,###,###,##0.00}" style="float:right;">
+                            <apex:param value="{!total}" />
+                        </apex:outputText>
+                    </th>
+                </tr>
+            </table>
+            <br/>
+            <div style="text-align: center;">
+                <apex:outputText style="text-align: center;" value="Your account balance is USD " />
+                <apex:outputText style="text-align: center; color: red;" value="{0,number,###,###,##0.00}">
+                    <apex:param value="{!total}" />
+                </apex:outputText>
+                <br/>
+                <apex:outputText style="text-align: center;" value="Please make your payment to cover the balance by the due date." />
+                <br/>
+                <br/>
+                <apex:outputText style="text-align: center;" value="THANK YOU!" />
+            </div>
+        </div>
+    </body>
+</apex:page>

@@ -1,0 +1,213 @@
+<apex:page controller="CargoesReceiptController" contentType="text/html" showHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf" >
+
+    <head>
+        <style> 
+        @page{
+            /* margin: 0 20px; */
+        }
+            table1, .table1 th,.table1 td {
+                border: 1px solid black;
+                text-align: center;
+            }    
+            .table1 th{
+                text-decoration: underline;
+                padding: 3px;
+            }
+            .table2, .table2 th, .table2 td {
+                border: none;
+                text-align: left;
+            }
+        </style>
+    </head>
+
+    <body>
+        <br/>
+        <br/>
+        <br/>
+        <div>
+            <div style="width: 60%; float: left; text-align: center;height: 100px;">
+                <p style="font-size: 26px;text-decoration: underline;font-weight: bold;height: 100%;margin-block: auto;">CARGOES RECEIPT</p>
+            </div>
+            <div style="width: 40%; float: right; width: 190px;height: 100px;margin-right: 90px">
+                <img align="middle" src="{!$Setup.clofor_com_cfs__Site_Custom_Settings__c.clofor_com_cfs__Logo_URL__c}" style="width: 100%;height: 100%"/>        
+            </div>
+    </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <table style="width: 55%;border-collapse: collapse">
+            <col width = "15%"/>
+            <col width = "40%"/>
+            <tr>
+                <th style="vertical-align: top">Shipper:</th>
+                <td>
+                    <apex:outputText value="{!shipment.clofor_com_cfs__ADDRESS_ON_B_L__c}"></apex:outputText>
+                </td>
+            </tr>
+            <tr style="visibility: hidden">
+                <th>test</th>
+                <td>tes</td>
+            </tr>
+            <tr style="visibility: hidden">
+                <th>test</th>
+                <td>tes</td>
+            </tr>
+            <tr>
+                <th style="vertical-align: top">Cnee:</th>
+                <td>
+                    <apex:outputText value="{!shipment.clofor_com_cfs__CNEE_ADDRESS_ON_B_L__c}"></apex:outputText>
+                </td>
+            </tr>
+        </table>
+        <br/>
+        <br/>
+        <table class="table1" style="width: 100%;border-collapse: collapse">
+            <col width="12%" />
+            <col width="11%" />
+            <col width="15%" />
+            <col width="11%" />
+            <col width="5%" />
+            <col width="9%" />
+            <col width="6%" />
+            <col width="13%" />
+            <col width="20%" />
+            <tr>
+                <th>P.O No</th>
+                <th>Order No.</th>
+                <th>Style No.</th>
+                <th>Article No</th>
+                <th>Ctns</th>
+                <th>Weight</th>
+                <th>CBM</th>
+                <th>Actual CBM</th>
+                <th>Dimension</th>
+            </tr>
+            <apex:repeat value="{!lstCon}" var="con">
+                <tr>
+                    <td style="text-align: center;">
+                        <apex:outputText value="{!con['P_O_No__c']}" />
+                    </td>
+                    <td style="text-align: center;">
+                        <apex:outputText value="{!con['Order_No__c']}" />
+                    </td>
+                    <td style="text-align: center;">
+                        <apex:outputText value="{!con['Style_No__c']}" />
+                    </td>
+                    <td style="text-align: center;">
+                        <apex:outputText value="{!con['Article_No__c']}" />
+                    </td>
+                    <td style="text-align: center;">
+                        <apex:outputText value="{!con['expr0']}" />
+                    </td>
+                    <td style="text-align: center;">
+                        <apex:outputText value="{0,number,###,###,###,##0.00}">
+                            <apex:param value="{!con['expr1']}"/>
+                        </apex:outputText>
+                    </td>
+                    <td style="text-align: center;">
+                        <apex:outputText value="{0,number,###,###,###,##0.000}">
+                            <apex:param value="{!con['expr2']}"/>
+                        </apex:outputText>
+                    </td>
+                    <td style="text-align: center;">
+                        <apex:outputText value="{0,number,###,###,###,##0.000}">
+                            <apex:param value="{!con['expr3']}"/>
+                        </apex:outputText>
+                    </td>
+                    <td style="text-align: center;">
+
+                    </td>
+                </tr>
+            </apex:repeat>
+            <tr>
+                <th colspan="4">Total:</th>
+                <td style="text-align: center;">
+                    <apex:outputText value="{!sumCtns}" />
+                </td>
+                <td style="text-align: center;">
+                    <apex:outputText value="{0,number,###,###,###,##0.00}">
+                            <apex:param value="{!sumWeight}"/>
+                    </apex:outputText>
+                </td>
+                <td style="text-align: center;">
+                    <apex:outputText value="{0,number,###,###,###,##0.000}">
+                            <apex:param value="{!sumCBM}"/>
+                    </apex:outputText>
+                </td>
+                <td style="text-align: center;">
+                    <apex:outputText value="{0,number,###,###,###,##0.000}">
+                            <apex:param value="{!sumActCBM}"/>
+                    </apex:outputText>
+                </td>
+                <td style="text-align: center;">
+
+                </td>
+            </tr>
+        </table>    
+            <p>This is certify that the quantity &amp; condition as above was checked / seen by all parties involved during
+                the time of pick up / Delivery</p>
+            <br/>    
+            <table class="table2" style="width: 100%; border-collapse: collapse">
+            <col width="20%" />
+            <col width="30%" />
+            <col width="20%" />
+            <col width="30%" />
+
+                <tr>
+                    <th>Date of delivery :</th>
+                    <td>
+                        <apex:outputField value="{!shipment.Date_of_delivery__c}" />
+                    </td>
+                    <th>Date of Received :</th>
+                    <td>
+                        <apex:outputField value="{!shipment.Date_of_Received__c}" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Time of delivery :</th>
+                    <td>
+                        <apex:outputField value="{!shipment.Time_of_delivery__c}" />
+                    </td>
+                    <th>Time of Received :</th>
+                    <td>
+                        <apex:outputField value="{!shipment.Time_of_Received__c}" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Deliver By :</th>
+                    <td>
+                        <apex:outputField value="{!shipment.Delivery_by__c}" />
+                    </td>
+                    <th>Received by :</th>
+                    <td>
+                        <apex:outputField value="{!shipment.Received_by__c}" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Trucking No. :</th>
+                    <td>
+                        <apex:outputField value="{!shipment.Trucking_No__c}" />
+                    </td>
+                    <th>Signature :</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Signature :</th>
+                    <td></td>
+                    <th></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Tel :</th>
+                    <td>
+                        <apex:outputField value="{!shipment.Tel__c}" />
+                    </td>
+                    <th></th>
+                    <td></td>
+                </tr>
+            </table>
+    </body>
+</apex:page>

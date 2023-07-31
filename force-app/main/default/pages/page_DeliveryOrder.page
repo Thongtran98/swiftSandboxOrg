@@ -1,0 +1,171 @@
+<apex:page controller="DeliveryOrderController" contentType="text/html" showHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0"  renderAs="pdf">
+<head>
+    <style>
+        @page {
+            /* size: A4; */
+            margin-left: 20px;      
+            margin-right: 20px;
+            height:100%;
+            @bottom-center {
+                content: element(footer);
+            }
+        }
+        body{
+            font-size: 10px;
+           
+            }
+        div.footer {
+            display: block;
+            position: running(footer);
+        }
+    </style>
+</head>
+<header style="margin-left: 1.7cm;">
+    <img src = "https://swift-freight-logistics--swift01.sandbox.file.force.com/servlet/servlet.FileDownload?file=0151y000000amj4" width="200px" height="40px;" style="margin-left: -10px;" >
+    </img> 
+</header>
+<body style="margin-left: 1.5cm; margin-right: 1.5cm; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">
+    <br/>
+    <br/>
+    <div style="text-align: center; text-decoration:underline; font-size:20px; margin-top: -15px;">
+        <b>DELIVERY ORDER</b>
+    </div>
+    <br/>
+    <br/>
+    <div style="font-size: 10px; line-height: 17px;">
+        <b>SWIFT FREIGHT LOGISTICS LTD.</b> authorizes 
+        <b><apex:outputText value="{!DeliveryOrder.clofor_com_cfs__Cnee__r.Name}"/></b> to do the customs formality and clearance under the following particulars:
+    </div>
+    <br/>
+    <table style="font-size:10px; margin-left: auto; margin-right: auto; width: 400px;">
+        <tr>
+            <td style="width: 160px; height: 24px;"> <b>HOUSE B/L No. :</b></td>
+            <td>{!DeliveryOrder.clofor_com_cfs__HBL_Number_SEA_AIR__c}</td>
+        </tr>
+        <tr>
+            <td style="height: 25px;"><b>MASTER B/L No. :</b></td>
+            <td>{!DeliveryOrder.clofor_com_cfs__MBL_Number_SEA_AIR__c}</td>
+        </tr>
+        <tr>
+            <td style="height: 25px;"><b>PORT OF LOADING :</b></td>
+            <td>{!DeliveryOrder.clofor_com_cfs__PortOfLoadingDetailPrint__c}</td>
+        </tr>
+        <tr>
+            <td style="height: 25px;"><b>PORT OF DISCHARGE :</b></td>
+            <td>{!DeliveryOrder.clofor_com_cfs__PortOfDischargeDetailPrint__c}</td>
+        </tr>
+        <tr>
+            <td style="height: 25px;"><b>VESSEL / VOY No. :</b></td>
+            <td>{!DeliveryOrder.clofor_com_cfs__Vessle__c} / 
+                {!DeliveryOrder.clofor_com_cfs__Voy_No__c}
+            </td>
+        </tr>
+        <tr>
+            <td style="height: 25px;"><b>No. OF PACKAGES :</b></td>
+            <td>
+                <!-- {!DeliveryOrder.clofor_com_cfs__carton__c} {!DeliveryOrder.clofor_com_cfs__UnitType__c} -->
+                <apex:outputText value="{!DeliveryOrder.clofor_com_cfs__carton__c } "/>
+                <apex:outputField value="{!DeliveryOrder.clofor_com_cfs__UnitType__c}"  rendered="{!DeliveryOrder.clofor_com_cfs__carton__c != null && DeliveryOrder.clofor_com_cfs__carton__c == 1}"/>
+                <apex:outputText value="{!DeliveryOrder.clofor_com_cfs__UnitType__c}s"  rendered="{!DeliveryOrder.clofor_com_cfs__carton__c != null && DeliveryOrder.clofor_com_cfs__carton__c != 1}"/>
+            </td>
+        </tr>
+        <tr>
+            <td style="height: 25px;"><b>WEIGHT :</b></td>
+            <td>{!DeliveryOrder.clofor_com_cfs__weight__c} Kgs</td>
+        </tr>
+        <tr>
+            <td style="height: 25px;"><b>VOLUME (CBM) :</b></td>
+            <td>{!DeliveryOrder.clofor_com_cfs__CBM__c} M3</td>
+        </tr>
+        <tr>
+            <td style="height: 25px;vertical-align: top;"><b>CONTAINER No. :</b></td>
+            <td>{!DeliveryOrder.clofor_com_cfs__CONTAINERSEALNO__c}</td>
+        </tr>
+    </table>
+    <br/>
+
+    <div>
+        <i style="font-size: 10px;"> 
+            This Bill of Lading has been surrendered and payment to co-loader has been made in full. Please release the cargo to the consignee without the original Bill of Lading.
+        </i>
+    </div>
+    <br/>
+
+    <div>
+        <i style="font-size: 10px;">
+        Thank you for your kind co-operation and assistance and if you have any queries, please feel free to contact us.    
+        </i>
+    </div>
+    <br/>
+
+    <!-- <div>
+        <i style="font-size: 10px;">
+        For withdraw The Delivery Order at {!DeliveryOrder.clofor_com_cfs__PortOfDischargeDetailPrint__c}, please check shipping mark before release cargo.    
+        </i>
+    </div> -->
+    <br/>
+
+    <div>
+        <b style="font-size: 10px;">Faithfully Yours,</b>
+    </div>
+    <br/>
+
+    <div style="margin-left: 320px; font-size: 10px;">
+        Delivered On : 
+    </div>
+    <br/>
+    <div style="margin-left: 320px; font-size: 10px;">
+        Delivered To :
+    </div>
+    <br/>
+    <div style="margin-left: 320px; font-size: 10px;">
+        ID Number : 
+    </div>
+    <br/>
+    <div style="margin-left: 320px; font-size: 10px;">
+        Phone Number : 
+    </div>
+    <br/>
+    <div style="margin-left: 320px; font-size: 10px;">
+        Signature : 
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div style="text-align: left;">
+        <div style="font-size: 11px;">
+            <apex:outputText value="{!NameOfUser}"/> 
+        </div>
+        <br/>
+        <div style="font-size: 11px;">
+            On behalf of, 
+        </div>
+        <br/>
+        <div style="font-size: 11px;">
+            <b>SWIFT FREIGHT LOGISTICS LTD.</b>
+        </div>
+    </div>
+    <footer>       
+        <table style="position:fixed; bottom:-1px; margin-left: 1.4cm;">
+            <tr>
+        <td style="font-size: 9px;"> SWIFT FREIGHT LOGISTICS LTD.</td>
+    </tr>
+    <tr>
+        <td style="font-size: 7px;">
+            Office Address : Plot 61, Street 570-331, Sangkat Boeung Kok II, Phnom Penh, Cambodia. TEL : +855 23 982 228. VAT No. : K005-107005891 
+        </td>
+    </tr>
+        </table>
+    </footer>
+    <!-- <div class="footer" style="clear:both; width: 800px">
+        <div class="footerleft" style="float:left; width: 45%; text-align: left;">
+            <div>
+                SWIFT FREIGHT LOGISTICS LTD.
+                Office Address : Plot 61, Street 570-331, Sangkat Boeung Kok II, Phnom Penh, Cambodia. TEL : +855 23 982 228. VAT No. : K005-107005891
+            </div>
+        </div>
+    </div> -->
+</body>
+</apex:page>

@@ -1,0 +1,189 @@
+<apex:page controller="FormMBLController" contentType="text/html" showHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    </html>
+    <head>
+        <style>
+            @page{
+                size: A4;
+            }
+            body{
+                font-size: 12px;
+            }
+            table td{
+                padding: 6px 0;
+                
+            }
+            table.Shipment td{
+                padding-left: 10px;
+                border-right: 1.1px solid black;
+                border-bottom: 1.1px solid black;
+            }
+            table.Shipment2 td{
+                padding-left: 10px;
+                border-right: 1.1px solid black;
+                border-bottom: 1.1px solid black;
+            }
+            table.Shipment2 tr td:first-child() {
+              
+                font-weight: bold;
+            }
+            table.Consol tr td:first-child {
+                font-weight: bold;
+            }
+            table.Consol2 tr td:first-child {
+                font-weight: bold;
+            }
+            table.Consol2 tr th:nth-child(3) {
+                font-weight: bold;
+            }
+            .bold{
+                font-weight: bold;
+            }
+            
+        </style>
+
+    </head>
+    <body>
+        <!-- <div class="draft">
+            <img src=""  width="180px" height="40px"/>
+        </div> -->
+        <div class="logo">
+            <img src="https://swift-freight-logistics--swift01.sandbox.file.force.com/servlet/servlet.FileDownload?file=0151y000000akiB" width="180px" height="40px"/>
+        </div>
+        <div style="float: right;font-size: 18px;font-weight: bold;"> 
+            <apex:outputText value="{!consol.Name}"/> 
+        </div>
+        <br/>
+        <div>
+            <table class="Consol" style="border-collapse: collapse;width: 100%;">
+                <col width="20%"/>
+                <col width="80%"/>
+                <tr>
+                    <td><apex:outputText value="MBL No. "/></td>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__MMaster_B_L_No__c}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="Customer "/></td>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__Field1__r.Name}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="Shipper "/></td>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__MShipper__r.Name}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="Consignee "/></td>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__MCnee__r.Name}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="Notify Party "/></td>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__MNotifyParty__r.Name}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="Agent "/></td>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__MBookingNv__r.Name}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="Carrier "/></td>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__Line__r.Name}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="Commodity "/></td>
+                    <apex:repeat value="{!listshipment}" var="shipment">
+                        <td><apex:outputText value="{!shipment.clofor_com_cfs__Commodity_Type__c}"/></td>
+                    </apex:repeat>
+                    
+                </tr>
+                
+            </table>
+            <br/>
+            <table class="Consol2" style="border-collapse: collapse;width: 100%;">
+                <col width="20%"/>
+                <col width="30%"/>
+                <col width="20%"/>
+                <col width="30%"/>
+                <tr>
+                    <td><apex:outputText value="POL "/></td>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__MPOL__c}"/></td>
+                    <th><apex:outputText value="POD "/></th>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__MPOD__c}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="ETD "/></td>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__METD__c}"/></td>
+                    <th><apex:outputText value="ETA "/></th>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__META__c}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="CBM "/></td>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__Autorollupcbm__c}"/></td>
+                    <th><apex:outputText value="QTY "/></th>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__rollupcargoquantity__c}"/></td>
+                </tr>
+                <tr>
+                    <td><apex:outputText value="Created by "/></td>
+                    <td><apex:outputField value="{!consol.CreatedById}"/></td>
+                    <th><apex:outputText value="Created at "/></th>
+                    <td><apex:outputField value="{!consol.clofor_com_cfs__MPrintDate__c}"/></td>
+                </tr>
+                <br/>
+                <tr>
+                    <td><apex:outputText value="Telex Release 	 "/></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            <table class="Shipment" border="1" style="border-collapse: collapse;width: 100%; border: 1.1px solid black;">
+                <col width="25%"/>
+                <col width="25%"/>
+                <col width="25%"/>
+                <col width="12.5%"/>
+                <col width="12.5%"/>
+                <tr>
+                    <td class="bold"><apex:outputText value="Container No."/></td>
+                    <td class="bold"><apex:outputText value="Seal No."/></td>
+                    <td class="bold"><apex:outputText value="Size"/></td>
+                    <td class="bold"><apex:outputText value="DEM"/></td>
+                    <td class="bold"><apex:outputText value="DET"/></td>
+                </tr>
+                <apex:repeat value="{!listcon}" var="con">
+                    <tr>
+                        <td><apex:outputField value="{!con.clofor_com_cfs__ContainerNO__c}"/></td>
+                        <td><apex:outputField value="{!con.clofor_com_cfs__SealNo__c}"/></td>
+                        <td><apex:outputField value="{!con.clofor_com_cfs__ContainerType__c}"/></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </apex:repeat>
+            </table>
+            <br/>
+            <table class="Shipment2" border="1" style="border-collapse: collapse;width: 100%;border: 1.1px solid black;">
+                <col width="18.75%"/>
+                <col width="18.75%"/>
+                <col width="18.75%"/>
+                <col width="18.75%"/>
+                <col width="12.5%"/>
+                <col width="12.5%"/>
+                <tr>
+                    <td class="bold"><apex:outputText value="Booking No."/></td>
+                    <td class="bold"><apex:outputText value="Shipper"/></td>
+                    <td class="bold"><apex:outputText value="Consignee"/></td>
+                    <td class="bold"><apex:outputText value="Customer"/></td>
+                    <td class="bold"><apex:outputText value="TT.Weights"/></td>
+                    <td class="bold"><apex:outputText value="TT.Volumes"/></td>
+                </tr>
+                <apex:repeat value="{!listshipment2}" var="shipment">
+                    <tr>
+                        <td><apex:outputField value="{!shipment.clofor_com_cfs__HouseBookingNo__c}"/></td>
+                        <td><apex:outputField value="{!shipment.clofor_com_cfs__shipper__r.Name}"/></td>
+                        <td><apex:outputField value="{!shipment.clofor_com_cfs__Cnee__r.Name}"/></td>
+                        <td><apex:outputField value="{!shipment.clofor_com_cfs__Field1__r.Name}"/></td>
+                        <td><apex:outputField value="{!shipment.clofor_com_cfs__weight__c}"/></td>
+                        <td><apex:outputField value="{!shipment.clofor_com_cfs__CBM__c}"/></td>
+                    </tr>
+                </apex:repeat>
+            </table>
+        </div>
+    </body>
+</apex:page>

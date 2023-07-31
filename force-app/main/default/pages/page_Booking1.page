@@ -1,0 +1,147 @@
+<apex:page controller="BookingController" renderAs="pdf">
+    <html>
+
+        <body>         
+            <table border="1px black" style = "border-collapse: collapse; width:100%; height:150%; margin-left:1px; margin-top: 15px; font-family:Arial, Helvetica, sans-serif;">
+            <tr style ="height:15px;"> 
+                 <th style = "background-color: #f2f2f2; font-size: 10px; border-bottom:hidden;" colspan = "3"><apex:outputText value=" Shipper (Name & Address)"/></th>
+                 <td style = "border-right:hidden;" rowspan = "2">
+                    <img style="margin-bottom: 80px;" src = "https://swift-freight-logistics--swift01.sandbox.file.force.com/servlet/servlet.FileDownload?file=0151y000000akiB" width="100px" height="20px" >
+                    </img>
+                </td>
+                 <td style ="color:rgb(80 114 149); border-bottom:hidden; font-weight:bold; font-size: 11px;" colspan = "2">Swift Freight Logistics Limited</td>
+            </tr>
+            
+            <tr style ="height:100px; font-size:10px; margin-left: 2px;"> 
+                <td colspan = "3"> <apex:outputText value="{!Booking.clofor_com_cfs__ADDRESS_ON_B_L__c}"/> </td>               
+                <td style ="color:rgb(80 114 149);font-size: 11px;" colspan = "2"> <div style="position:relative; bottom:22px;">
+                                                                                    Plot 61, Street 570-331, Sangkat Boeung Kok II, <br/> 
+                                                                                    Khan Toul Kork, Phnom Penh, Cambodia <br/>
+                                                                                    Tel: +855 23 991 228, +855 23 982 228 <br/>
+                                                                                    Fax: + 855 23 998 228 </div>
+                </td>           
+            </tr>
+
+            <tr style ="height:15px;">
+                <th style = "background-color: #f2f2f2; font-size: 10px; border-bottom:hidden;" colspan = "3">
+                    <apex:outputText value="Consignee (Name & Address)"/>
+                </th>
+                 <td colspan = "3" rowspan = "2" > 
+                    <div style="position:relative; bottom:15px; color:rgb(73 111 156); text-decoration: underline; text-align:center; font-size: 17px; font-weight: bold;">
+                        Booking Form</div>
+                 </td>
+            </tr>
+
+            <tr style ="height:100px;"> 
+                <td style = "font-size: 10px;" colspan = "3">
+                    <apex:outputText value="{!Booking.clofor_com_cfs__CNEE_ADDRESS_ON_B_L__c}"/>
+                </td>
+            </tr>
+
+            <tr style ="height:15px; background-color: #f2f2f2; font-size: 10px; border-bottom:hidden;"> 
+                 <th style ="border-bottom:hidden;" colspan = "3"><apex:outputText value=" Notify Party (Name & Address)"/></th>
+                 <th style ="border-bottom:hidden;" colspan = "3">Booking Details</th>    
+            </tr>
+            <tr style ="height:15px; font-size: 10px;"> 
+                <td colspan = "3" rowspan = "6"><apex:outputText value="{!Booking.clofor_com_cfs__NOTIFY_ADDRESS_ON_B_L__c}"/> </td>
+                 <td style = "border-bottom: hidden;border-right: hidden;">Booking Date</td>
+                 <td style = "border-bottom: hidden;" colspan = "2"> <apex:outputText style="margin-left:15px" value="{0,date, MMM-dd-yyyy}">
+                    <apex:param value="{!Booking.clofor_com_cfs__BookingDate__c}"/> 
+                        </apex:outputText> 
+                </td>
+            </tr>
+
+            <tr style="font-size:10px; height:15px;"> 
+                 <td style = "border-bottom: hidden;border-right: hidden;">Cargo Ready Date</td>
+                 <td style = "border-bottom: hidden;" colspan = "2"><apex:outputText style="margin-left:15px" value="{0,date, MMM-dd-yyyy}">
+                    <apex:param value="{!Booking.Cargo_Ready_Date__c}"/> 
+                        </apex:outputText>
+                </td>
+            </tr>
+
+            <tr style="font-size:10px; height:15px;"> 
+                 <td style = "border-bottom: hidden;border-right: hidden;">Document Ready Date</td>
+                 <td style = "border-bottom: hidden;" colspan = "2"><apex:outputText style="margin-left:15px" value="{0,date, MMM-dd-yyyy}">
+                    <apex:param value="{!Booking.Document_Ready_Date__c}" /> 
+                        </apex:outputText>
+                </td>
+            </tr>
+
+            <tr style="font-size:10px; height:15px;"> 
+                 <td style = "border-bottom: hidden;border-right: hidden;">On Board Date</td>
+                 <td style = "border-bottom: hidden;" colspan = "2"> <apex:outputText style="margin-left:15px" value="{0,date, MMM-dd-yyyy}">
+                    <apex:param value="{!Booking.clofor_com_cfs__ETD__c}" /> 
+                        </apex:outputText>
+                </td>
+            </tr>
+
+            <tr style="font-size:10px; height:15px;"> 
+                 <td style = "border-bottom: hidden;border-right: hidden;">Freight Term</td>
+                 <td style = "border-bottom: hidden;" colspan = "2">
+                    <apex:outputText style="margin-left:15px" value="{!Booking.clofor_com_cfs__PriceTerms__c}"/>
+                </td>
+            </tr>    
+
+            <tr style="font-size:10px; height:15px;"> 
+                 <td style = " border-right:hidden;">Factory Name</td>
+                 <td colspan = "2"> 
+                    <apex:outputText style="margin-left:15px" value="{!Booking.clofor_com_cfs__LoadLocation__c}"/>
+                </td>
+            </tr>  
+
+            <tr style = "font-size: 10px; height: 15px; background-color: #f2f2f2;"> 
+                <th style = "width:13%; text-align:center; border-bottom:hidden;">Place of Receipt</th>
+                <th style = "width:21%; text-align:center; border-bottom:hidden;">Port of Loading</th>
+                <th style = "width:16%; text-align:center; border-bottom:hidden;">Port of Discharge</th>
+                <th style = "width:15%; text-align:center; border-bottom:hidden;">Place of Delivery</th>
+                <th style = "width:20%; text-align:center; border-bottom:hidden;">FCL / LCL</th>
+                <th style = "width:15%; text-align:center; border-bottom:hidden;">Equipment Required</th>
+            </tr>
+
+            <tr style = "font-size: 10px; height: 50px;"> 
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__PlaceOfReceiptDetailPrint__c}"/></td>
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__PortOfLoadingDetailPrint__c}"/></td>
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__PortOfDischargeDetailPrint__c}"/></td>
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__PlaceOfDeliveryDetailPrint__c}"/></td>
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__CARGO_TYPE__c}"/></td>
+                <td></td>
+            </tr>
+
+            <tr style = "background-color: #f2f2f2; font-size: 10px; height:15px;"> 
+                <th style = "text-align:left;">PO</th>
+                <th style = "text-align:left;">Style</th>
+                <th style = "text-align:center;">Description of goods</th>
+                <th style = "text-align:center;">Unit</th>
+                <th style = "text-align:center;">Gross Weight (kg)</th>
+                <th style = "text-align:center;">Volume (cbm)</th>
+            </tr>
+
+            <tr style = "font-size: 10px; height:410px;"> 
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__HouseBookingNo__c}"/></td>
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__Marks_and_Numbers__c}"/></td>
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__Item__c}"/></td>
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__carton__c} {!Booking.clofor_com_cfs__UnitType__c}"/></td>
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__weight__c}"/></td>
+                <td><apex:outputText value="{!Booking.clofor_com_cfs__CBM__c}"/></td>
+            </tr>
+
+            <tr style="background-color: #d9d9d9; height:15px;">
+                <td style = " font-weight:bold; font-size: 10px;" colspan="2">Total</td>
+                <td></td>
+                <td style = " font-weight:bold; font-size: 10px;"><apex:outputText value="{0,number,###,###,##0}" style="float:right;">
+                    <apex:param value="{!SumUnit}" />
+                </apex:outputText>
+                </td>
+                <td style = " font-weight:bold; font-size: 10px;"><apex:outputText value="{0,number,###,###,##0.000}" style="float:right;" >
+                    <apex:param value="{!SumWeight}" />
+                </apex:outputText>
+                </td>
+                <td style = " font-weight:bold; font-size: 10px;"><apex:outputText value="{0,number,###,###,##0.000}" style="float:right;" >
+                    <apex:param value="{!SumVolume}" />
+                </apex:outputText>
+                </td>
+            </tr>
+        </table> 
+        </body>
+        </html>
+</apex:page>

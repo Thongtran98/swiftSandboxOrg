@@ -1,0 +1,2430 @@
+<apex:page controller="ProfitLossControllerMasterBilling" applyBodyTag="false" cache="true" title="HBL Detail" showHeader="false" applyHtmlTag="false"
+    docType="html-5.0">
+
+    <head>
+        <style>
+        .header{
+            display: flex;
+        }
+        .printdate .info {
+            float: right;
+            
+        }
+        .printdate{
+            width: 50%;
+            font-weight: bold;
+            color: blue;
+        }
+        .child-info {
+            width: 300px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .info{
+            font-weight: bold;
+            color: blue;
+        }
+        a:link, a:visited { 
+            text-decoration: none;
+            cursor: auto;
+        }
+        
+    </style>
+    </head>
+
+    <body>
+        <div>
+            <apex:form >
+                <apex:pageBlock id="selectChoise">
+                    <div id="testId" style="display: flex;justify-content: space-around;border-bottom: 1px solid black;">
+                        <div>
+                            <apex:selectList styleClass="selectedDate" onchange="handleDatesChange()" value="{!selectedDate}" multiselect="false" size="1">
+                                <apex:outputText value="Dates " />
+                                <apex:selectOptions value="{!dateOptions}" />
+                                <apex:actionSupport event="onchange" reRender="jsPanel, filterSection" status="status" />
+                            </apex:selectList>
+                        </div>
+                        <apex:outputPanel style="display: flex;justify-content: space-between;" id="dateChange" layout="block">
+                            <div>
+                                <apex:outputText value="From " />
+                                <input name="dateFrom" type="date" maxlength="512" id="dateFrom" class="searchField" value="{!dateFromText}" />
+                                <!-- <apex:input onchange="handleSelectChange()" id="dateFrom" type="date" value="{!selectedDate}" required="true" /> -->
+                            </div>
+                            <div style="margin-left: 10px">
+                                <apex:outputText value="To " />
+                                <input name="dateTo" id="dateTo" type="date" value="{!dateToText}" required="true" />
+                            </div>
+                        </apex:outputPanel>
+                        <div>
+                            <apex:selectList styleClass="selectedval" value="{!selectedColumn}" multiselect="false" size="1">
+                                <apex:outputText value="Columns " />
+                                <apex:selectOptions value="{!columnOptions}" />
+                            </apex:selectList>
+                        </div>
+
+                        <div>
+                            <apex:selectList value="{!selectedSort}" multiselect="false" size="1">
+                                <apex:outputText value="Sort By " />
+                                <apex:selectOptions value="{!sortOptions}" />
+                            </apex:selectList>
+                        </div>
+                        <div>
+                            <apex:commandButton style="margin-bottom: 4px" id="selectChange" value="Generate" onclick="handleSelectChange(); return false;"
+                            />
+                        </div>
+                        <button class="no-print" onclick="handlePrint()" style="margin:2mm 2mm 2mm 2mm; text-transform: uppercase; padding:2mm 3mm;font-size:12pt;float:right; background: lightgray; border: 1px solid #b5b5b5; font-weight: normal;width: 90px; height: 50px;">
+                            PRINT
+                        </button>
+                    </div>
+                    <div id="testSubmit">
+                        <apex:outputPanel id="main2" layout="block" style="{!IF(showInput == true,'','display: none;')}">
+                            <!-- <div style="display: flex;">
+                                <div>
+                                    <apex:outputText value="INVOICE TO"/>
+                                </div>
+                                <div>
+                                    <apex:inputField styleClass="clsCustomer" value="{!objAnkenMeisaiFilter.clofor_com_cfs__Field1__c}"
+                                                    />
+                                </div>
+                            </div>
+                            <div style="display: flex;">
+                                <div>
+                                    <apex:outputText value="Master File.No"/>
+                                    <input name="customer" id="customer" type="text"/>
+                                </div>
+                                <div>
+                                    <input type="button" style="margin-left: 20px" id="btnSubmit" value='Submit' onclick="handleSelect(); return false;"/>
+                                </div>
+                            </div> -->
+                            <table style="width: 40%;">
+                                <tr>
+                                    <td>
+                                        <apex:outputText value="CUSTOMER"/>
+                                    </td>
+                                    <td>
+                                        <apex:inputField styleClass="clsCustomer" value="{!objAnkenMeisaiFilter.clofor_com_cfs__Seikyusaki__c}"
+                                                    />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <apex:outputText value="Master File.No"/>
+                                    </td>
+                                    <td>
+                                        <input name="customer" id="customer" type="text"/>
+                                        <input type="button" style="margin-left: 20px" id="btnSubmit" value='Submit' onclick="handleSelect(); return false;"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                        </apex:outputPanel>
+                    </div>
+                        
+                  
+
+                </apex:pageBlock>
+                <apex:outputPanel id="jsPanel">
+                    <script type="text/javascript">
+                        function handleSelectChange() {
+                            var dateFrom = document.getElementById("dateFrom").value;
+                            var dateTo = document.getElementById("dateTo").value;
+                            var selectedval = document.querySelector(".selectedval").value;
+                            console.log(dateFrom);
+                            console.log('log 1:' + dateFrom);
+                            console.log('log 2:' + dateTo);
+                            console.log('log 3:' + selectedval);
+                            var url;
+                            url = '/apex/page_ProfitLoss?'
+
+                            console.log('log 2:' + url);
+                            loadData(dateFrom, dateTo, selectedval);
+
+
+                        }
+                        function handlePrint(){
+                            // document.getElementById("main2").style.display = "none";
+                            document.getElementById("testId").style.display = "none";
+                            document.getElementById("testSubmit").style.display = "none";
+                            window.print();
+                        }
+                        function handleSelect(){
+                            var selectedDate = document.querySelector(".selectedDate").value;
+                            var customer = document.getElementById("customer").value;
+                            var clsCustomer = document.querySelector(".clsCustomer").value;
+                            var dateFrom = document.getElementById("dateFrom").value;
+                            var dateTo = document.getElementById("dateTo").value;
+                            console.log('customer :'+customer);
+                            console.log('clsCustomer :'+clsCustomer);
+                            console.log('dateFrom :'+dateFrom);
+                            console.log('dateTo :'+dateTo);
+                            console.log('selectedDate :'+selectedDate);
+                            var url;
+                            url = '/apex/page_ProfitLoss?'
+                            console.log('log 2:' + url);
+                            loadCustomer(customer,clsCustomer,dateFrom,dateTo,selectedDate);
+                        }
+                        function handleDatesChange() {
+                            var selectElement = event.target;
+                            var value = selectElement.value;
+                            console.log('123:' + value);
+                            SaveOnchange(value);
+                        }
+                    </script>
+                </apex:outputPanel>
+            </apex:form>
+        </div>
+
+        <apex:outputPanel id="main" layout="block">
+            <div class="header">
+                <div class="printdate">
+                    <apex:outputText value="{0, Time,yyyy-MM-dd HH:mm}">
+                        <apex:param value="{!printDate1}" />
+                    </apex:outputText>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div style="width: 200%;border-bottom: 3px solid black;">
+                        <apex:outputText style="color: black;" value="Accrual Basis" />
+                        <apex:outputText style="color: black;padding-left: 600px;" value="All Transactions" />
+                    </div>
+                </div>
+                <div class="info">
+                    <div class="child-info">
+                        <apex:outputText value="SWIFT FREIGHT LOGISTICS LTD." />
+                        <br/>
+                        <apex:outputText value="Profit & Loss" />
+                        <br/>
+                        <apex:outputText value="{!ListTime}" />
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <div id="change" style="text-align: center;{!IF(listDate.size > 0 ,'','display: none')}">
+                <!-- <table>
+                    <tr>
+                        
+                        <apex:repeat value="{!listDate}" var="date"> 
+                            <td style="width: 40px;">
+                                <apex:outputText value="{0, date,yyyy-MM-dd}">
+                                    <apex:param value="{!date}" />
+                                </apex:outputText>
+                               
+                            </td>
+                        </apex:repeat>
+                    </tr>
+                </table> -->
+                <!-- Start Customer -->
+                <apex:outputPanel rendered="{!columnOptions2 == 'Customers' && ((clsCustomer != null && customer !=null) || (clsCustomer == null && customer !=null))}">
+                    <table style="width: 100%;">
+                        <col width="7%"/>
+                        <col width="7%"/>
+                        <col width="30%"/>
+                        <col width="35%"/>
+                        <col width="7%"/>
+                        <col width="7%"/>
+                        <col width="7%"/>
+                        <tr>
+                            <td style="border-bottom: 1px solid black; text-align: center;font-weight: bold;">
+                                <apex:outputText value="Date"/>
+                            </td>
+                            <td style="border-bottom: 1px solid black; text-align: center;font-weight: bold;">
+                                <apex:outputText value="Num"/>
+                            </td>
+                            <td style="border-bottom: 1px solid black; text-align: center;font-weight: bold;">
+                                <apex:outputText value="Name"/>
+                            </td>
+                            <td style="border-bottom: 1px solid black; text-align: center;font-weight: bold;">
+                                <apex:outputText value="Memo"/>
+                            </td>
+                            <td style="border-bottom: 1px solid black; text-align: center;font-weight: bold;">
+                                <apex:outputText value="Amount"/>
+                            </td>
+                            <td style="border-bottom: 1px solid black; text-align: center;font-weight: bold;">
+                                <apex:outputText value="Foreign Amount"/>
+                            </td>
+                            <td style="border-bottom: 1px solid black; text-align: center;font-weight: bold;">
+                                <apex:outputText value="Foreign Balance"/>
+                            </td>
+                        </tr>
+                        <!-- START INCOME -->
+                        <tr>
+                            <td colspan="7" style="text-align: left;font-weight: bold;">
+                                <apex:outputText value="INCOME ACCOUNT"/>
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!lstCusIncome}" var="item">
+                            <tr>
+                                <td colspan="7" style="text-align: left;font-weight: bold;margin-left: 10px;">
+                                    <apex:outputText style="padding-left: 10px;" value="{!item.ChartName}"/>
+                                </td>
+                            </tr>
+                            <apex:repeat value="{!item.lstBillOfCustomer}" var="bill">
+                                <tr>
+                                    <td style="text-align: left;">
+                                        <!-- <apex:outputText value="{!bill.PrintDate}"/> -->
+                                        <apex:outputText value="{0, Time,dd-MM-yyyy}">
+                                            <apex:param value="{!bill.PrintDate}" />
+                                        </apex:outputText>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <apex:outputText style="text-decoration: none;" escape="false" value="{!bill.Num}"/>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <apex:outputText value="{!bill.NameOfBill}"/>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <apex:outputText value="{!bill.Memo}"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <apex:outputText rendered="{!bill.AmountIclFCY > 0}" value="{0,number,###,###,###.00}">
+                                            <apex:param value="{!bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                        <apex:outputText rendered="{!bill.AmountIclFCY < 0}" value="({0,number,###,###,###.00})">
+                                            <apex:param value="{!-bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="({!-bill.AmountIclFCY})" rendered="{!bill.AmountIclFCY < 0}"/> -->
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <apex:outputText rendered="{!bill.AmountIclFCY > 0}" value="{0,number,###,###,###.00}">
+                                            <apex:param value="{!bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                        <apex:outputText rendered="{!bill.AmountIclFCY < 0}" value="({0,number,###,###,###.00})">
+                                            <apex:param value="{!-bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/>
+                                        <apex:outputText value="({!-bill.AmountIclFCY})" rendered="{!bill.AmountIclFCY < 0}"/> -->
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <apex:outputText rendered="{!bill.AmountIclFCY2 > 0}" value="{0,number,###,###,###.00}">
+                                            <apex:param value="{!bill.AmountIclFCY2}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                        <apex:outputText rendered="{!bill.AmountIclFCY2 < 0}" value="({0,number,###,###,###.00})">
+                                            <apex:param value="{!-bill.AmountIclFCY2}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY2}" rendered="{!bill.AmountIclFCY2 > 0}"/>
+                                        <apex:outputText value="({!-bill.AmountIclFCY2})" rendered="{!bill.AmountIclFCY2 < 0}"/> -->
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY2}"/> -->
+                                    </td>
+                                </tr>
+                               
+                            </apex:repeat>
+                            <tr>
+                                <td colspan="2">
+                                    <apex:outputText value="Total {!item.ChartName}"/>
+                                </td>
+                                
+                                <td></td>
+                                <td></td>
+                                <td style="text-align: right;border-bottom: 1px solid black;border-top: 1px solid black;">
+                                    <apex:outputText rendered="{!item.IncomeAmount > 0}" value="{0,number,###,###,###.00}">
+                                        <apex:param value="{!item.IncomeAmount}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                    <apex:outputText rendered="{!item.IncomeAmount < 0}" value="({0,number,###,###,###.00})">
+                                        <apex:param value="{!-item.IncomeAmount}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="{!item.IncomeAmount}" rendered="{!item.IncomeAmount > 0}"/>
+                                    <apex:outputText value="({!-item.IncomeAmount})" rendered="{!item.IncomeAmount < 0}"/> -->
+                                    <!-- <apex:outputText value="{!item.IncomeAmount}"/> -->
+                                </td>
+                                <td style="text-align: right;border-top: 1px solid black;"></td>
+                                <td style="text-align: right;border-bottom: 1px solid black;border-top: 1px solid black;">
+                                    <apex:outputText rendered="{!item.IncomeAmountTotal > 0}" value="{0,number,###,###,###.00}">
+                                        <apex:param value="{!item.IncomeAmountTotal}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                    <apex:outputText rendered="{!item.IncomeAmountTotal < 0}" value="({0,number,###,###,###.00})">
+                                        <apex:param value="{!-item.IncomeAmountTotal}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="{!item.IncomeAmountTotal}" rendered="{!item.IncomeAmountTotal > 0}"/>
+                                    <apex:outputText value="({!-item.IncomeAmountTotal})" rendered="{!item.IncomeAmountTotal < 0}"/> -->
+                                    <!-- <apex:outputText value="{!item.IncomeAmountTotal}"/> -->
+                                </td>
+
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td colspan="2">
+                                <apex:outputText value="Total Income Account"/>
+                            </td>
+                            
+                            <td></td>
+                            <td></td>
+                            <td style="text-align: right;">
+                                <apex:outputText rendered="{!tong > 0}" value="{0,number,###,###,###.00}">
+                                    <apex:param value="{!tong}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                <apex:outputText rendered="{!tong < 0}" value="({0,number,###,###,###.00})">
+                                    <apex:param value="{!-tong}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!tong}" rendered="{!tong > 0}"/>
+                                <apex:outputText value="({!-tong})" rendered="{!tong < 0}"/> -->
+                                <!-- <apex:outputText value="{!tong}"/> -->
+                            </td>
+                            <td></td>
+                            <td style="text-align: right;">
+                                <apex:outputText rendered="{!tong > 0}" value="{0,number,###,###,###.00}">
+                                    <apex:param value="{!tong}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                <apex:outputText rendered="{!tong < 0}" value="({0,number,###,###,###.00})">
+                                    <apex:param value="{!-tong}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!tong}" rendered="{!tong > 0}"/>
+                                <apex:outputText value="({!-tong})" rendered="{!tong < 0}"/> -->
+                                <!-- <apex:outputText value="{!tong}"/> -->
+                            </td>
+
+                        </tr>
+                        <!-- END INCOME -->
+                        <!-- START COST -->
+
+                        <tr>
+                            <td colspan="7" style="text-align: left;font-weight: bold;">
+                                <apex:outputText value="Cost of Goods Sold"/>
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!lstCusCost}" var="item">
+                            <tr>
+                                <td colspan="7" style="text-align: left;font-weight: bold;">
+                                    <apex:outputText style="padding-left: 10px;" value="{!item.ChartName}"/>
+                                </td>
+                            </tr>
+                            <apex:repeat value="{!item.lstBillOfCustomer}" var="bill">
+                                <tr>
+                                    <td style="text-align: left;">
+                                        <!-- <apex:outputText value="{!bill.PrintDate}"/> -->
+                                        <apex:outputText value="{0, Time,dd-MM-yyyy}">
+                                            <apex:param value="{!bill.PrintDate}" />
+                                        </apex:outputText>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <apex:outputText escape="false" value="{!bill.Num}"/>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <apex:outputText value="{!bill.NameOfBill}"/>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <apex:outputText value="{!bill.Memo}"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <apex:outputText rendered="{!bill.AmountIclFCY > 0}" value="({0,number,###,###,###.00})">
+                                            <apex:param value="{!bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                        <apex:outputText rendered="{!bill.AmountIclFCY < 0}" value="{0,number,###,###,###.00}">
+                                            <apex:param value="{!-bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="({!bill.AmountIclFCY})" rendered="{!bill.AmountIclFCY > 0}"/>
+                                        <apex:outputText value="{!-bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY < 0}"/> -->
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <apex:outputText rendered="{!bill.AmountIclFCY > 0}" value="({0,number,###,###,###.00})">
+                                            <apex:param value="{!bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                        <apex:outputText rendered="{!bill.AmountIclFCY < 0}" value="{0,number,###,###,###.00}">
+                                            <apex:param value="{!-bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="({!bill.AmountIclFCY})" rendered="{!bill.AmountIclFCY > 0}"/>
+                                        <apex:outputText value="{!-bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY < 0}"/> -->
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <apex:outputText rendered="{!bill.AmountIclFCY2 > 0}" value="({0,number,###,###,###.00})">
+                                            <apex:param value="{!bill.AmountIclFCY2}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                        <apex:outputText rendered="{!bill.AmountIclFCY2 < 0}" value="{0,number,###,###,###.00}">
+                                            <apex:param value="{!-bill.AmountIclFCY2}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="({!bill.AmountIclFCY2})" rendered="{!bill.AmountIclFCY2 > 0}"/>
+                                        <apex:outputText value="{!-bill.AmountIclFCY2}" rendered="{!bill.AmountIclFCY2 < 0}"/> -->
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY2}"/> -->
+                                    </td>
+                                </tr>
+                               
+                            </apex:repeat>
+                            <tr>
+                                <td colspan="2">
+                                    <apex:outputText value="Total {!item.ChartName}"/>
+                                </td>
+                                
+                                <td></td>
+                                <td></td>
+                                <td style="text-align: right;border-bottom: 1px solid black;border-top: 1px solid black;">
+                                    <apex:outputText rendered="{!item.CostAmount > 0}" value="({0,number,###,###,###.00})">
+                                        <apex:param value="{!item.CostAmount}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                    <apex:outputText rendered="{!item.CostAmount < 0}" value="{0,number,###,###,###.00}">
+                                        <apex:param value="{!-item.CostAmount}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="({!item.CostAmount})" rendered="{!item.CostAmount > 0}"/>
+                                    <apex:outputText value="{!-item.CostAmount}" rendered="{!item.CostAmount < 0}"/> -->
+                                    <!-- <apex:outputText value="{!item.CostAmount}"/> -->
+                                </td>
+                                <td  style="text-align: right;border-top: 1px solid black;"></td>
+                                <td style="text-align: right;border-bottom: 1px solid black;border-top: 1px solid black;">
+                                    <apex:outputText rendered="{!item.CostAmountTotal > 0}" value="({0,number,###,###,###.00})">
+                                        <apex:param value="{!item.CostAmountTotal}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                    <apex:outputText rendered="{!item.CostAmountTotal < 0}" value="{0,number,###,###,###.00}">
+                                        <apex:param value="{!-item.CostAmountTotal}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="({!item.CostAmountTotal})" rendered="{!item.CostAmountTotal > 0}"/>
+                                    <apex:outputText value="{!-item.CostAmountTotal}" rendered="{!item.CostAmountTotal < 0}"/> -->
+                                    <!-- <apex:outputText value="{!item.CostAmountTotal}"/> -->
+                                </td>
+
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td colspan="2">
+                                <apex:outputText value="Total Cost of Goods Sold"/>
+                            </td>
+                            
+                            <td></td>
+                            <td></td>
+                            <td style="text-align: right;border-bottom: 1px solid black;">
+                                <apex:outputText rendered="{!tongCost > 0}" value="({0,number,###,###,###.00})">
+                                    <apex:param value="{!tongCost}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                <apex:outputText rendered="{!tongCost < 0}" value="{0,number,###,###,###.00}">
+                                    <apex:param value="{!-tongCost}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="({!tongCost})" rendered="{!tongCost > 0}"/>
+                                <apex:outputText value="{!-tongCost}" rendered="{!tongCost < 0}"/> -->
+                                <!-- <apex:outputText value="{!tongCost}"/> -->
+                            </td>
+                            <td></td>
+                            <td style="text-align: right;border-bottom: 1px solid black;">
+                                <apex:outputText rendered="{!tongCost > 0}" value="({0,number,###,###,###.00})">
+                                    <apex:param value="{!tongCost}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                <apex:outputText rendered="{!tongCost < 0}" value="{0,number,###,###,###.00}">
+                                    <apex:param value="{!-tongCost}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="({!tongCost})" rendered="{!tongCost > 0}"/>
+                                <apex:outputText value="{!-tongCost}" rendered="{!tongCost < 0}"/> -->
+                                <!-- <apex:outputText value="{!tongCost}"/> -->
+                            </td>
+
+                        </tr>
+                        <!-- <tr>
+                            <td colspan="2">
+                                <apex:outputText style="font-weight: bolder;" value="TOTAL"/>
+                            </td>
+                            
+                            <td></td>
+                            <td></td>
+                            <td style="text-align: right;font-weight: bolder;border-bottom: 3px solid black;">
+                                <apex:outputText value="{!FinalTotal}"/>
+                            </td>
+                            <td></td>
+                            <td style="text-align: right;font-weight: bolder;border-bottom: 3px solid black;">
+                                <apex:outputText value="{!FinalTotal}"/>
+                            </td>
+                        </tr> -->
+                        <!-- END COST -->
+                        <!-- START EXPENSE -->
+
+                        <tr>
+                            <td colspan="7" style="text-align: left;font-weight: bold;">
+                                <apex:outputText value="Expense"/>
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!lstCusExpense}" var="item">
+                            <tr>
+                                <td colspan="7" style="text-align: left;font-weight: bold;">
+                                    <apex:outputText style="padding-left: 10px;" value="{!item.ChartName}"/>
+                                </td>
+                            </tr>
+                            <apex:repeat value="{!item.lstBillOfCustomer}" var="bill">
+                                <tr>
+                                    <td style="text-align: left;">
+                                        <!-- <apex:outputText value="{!bill.PrintDate}"/> -->
+                                        <apex:outputText value="{0, Time,dd-MM-yyyy}">
+                                            <apex:param value="{!bill.PrintDate}" />
+                                        </apex:outputText>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <apex:outputText escape="false" value="{!bill.Num}"/>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <apex:outputText value="{!bill.NameOfBill}"/>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <apex:outputText value="{!bill.Memo}"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <apex:outputText rendered="{!bill.AmountIclFCY > 0}" value="({0,number,###,###,###.00})">
+                                            <apex:param value="{!bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                        <apex:outputText rendered="{!bill.AmountIclFCY < 0}" value="{0,number,###,###,###.00}">
+                                            <apex:param value="{!-bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="({!bill.AmountIclFCY})" rendered="{!bill.AmountIclFCY > 0}"/>
+                                        <apex:outputText value="{!-bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY < 0}"/> -->
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <apex:outputText rendered="{!bill.AmountIclFCY > 0}" value="({0,number,###,###,###.00})">
+                                            <apex:param value="{!bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                        <apex:outputText rendered="{!bill.AmountIclFCY < 0}" value="{0,number,###,###,###.00}">
+                                            <apex:param value="{!-bill.AmountIclFCY}"/>
+                                        </apex:outputText>
+                                        <apex:outputText value="({!bill.AmountIclFCY})" rendered="{!bill.AmountIclFCY > 0}"/>
+                                        <apex:outputText value="{!-bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY < 0}"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <!-- <apex:outputText value="({!bill.AmountIclFCY2})" rendered="{!bill.AmountIclFCY2 > 0}"/>
+                                        <apex:outputText value="{!-bill.AmountIclFCY2}" rendered="{!bill.AmountIclFCY2 < 0}"/> -->
+                                        <!-- <apex:outputText value="{!bill.AmountIclFCY2}"/> -->
+                                    </td>
+                                </tr>
+                               
+                            </apex:repeat>
+                            <tr>
+                                <td colspan="2">
+                                    <apex:outputText value="Total {!item.ChartName}"/>
+                                </td>
+                                
+                                <td></td>
+                                <td></td>
+                                <td style="text-align: right;border-bottom: 1px solid black;border-top: 1px solid black;">
+                                    <apex:outputText rendered="{!item.ExpenseAmount > 0}" value="({0,number,###,###,###.00})">
+                                        <apex:param value="{!item.ExpenseAmount}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                    <apex:outputText rendered="{!item.ExpenseAmount < 0}" value="{0,number,###,###,###.00}">
+                                        <apex:param value="{!-item.ExpenseAmount}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="({!item.ExpenseAmount})" rendered="{!item.ExpenseAmount > 0}"/>
+                                    <apex:outputText value="{!-item.ExpenseAmount}" rendered="{!item.ExpenseAmount < 0}"/> -->
+                                    <!-- <apex:outputText value="{!item.ExpenseAmount}"/> -->
+                                </td>
+                                <td  style="text-align: right;border-top: 1px solid black;"></td>
+                                <td style="text-align: right;border-bottom: 1px solid black;border-top: 1px solid black;">
+                                    <apex:outputText rendered="{!item.ExpenseAmountTotal > 0}" value="({0,number,###,###,###.00})">
+                                        <apex:param value="{!item.ExpenseAmountTotal}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                    <apex:outputText rendered="{!item.ExpenseAmountTotal < 0}" value="{0,number,###,###,###.00}">
+                                        <apex:param value="{!-item.ExpenseAmountTotal}"/>
+                                    </apex:outputText>
+                                    <!-- <apex:outputText value="({!item.ExpenseAmountTotal})" rendered="{!item.ExpenseAmountTotal > 0}"/>
+                                    <apex:outputText value="{!-item.ExpenseAmountTotal}" rendered="{!item.ExpenseAmountTotal < 0}"/> -->
+                                    <!-- <apex:outputText value="{!item.ExpenseAmountTotal}"/> -->
+                                </td>
+
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td colspan="2">
+                                <apex:outputText value="Total Expense"/>
+                            </td>
+                            
+                            <td></td>
+                            <td></td>
+                            <td style="text-align: right;border-bottom: 1px solid black;">
+                                <apex:outputText rendered="{!tongExpense > 0}" value="({0,number,###,###,###.00})">
+                                    <apex:param value="{!tongExpense}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                <apex:outputText rendered="{!tongExpense < 0}" value="{0,number,###,###,###.00}">
+                                    <apex:param value="{!-tongExpense}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="({!tongExpense})" rendered="{!tongExpense > 0}"/>
+                                <apex:outputText value="{!-tongExpense}" rendered="{!tongExpense < 0}"/> -->
+                                <!-- <apex:outputText value="{!tongExpense}"/> -->
+                            </td>
+                            <td></td>
+                            <td style="text-align: right;border-bottom: 1px solid black;">
+                                <apex:outputText rendered="{!tongExpense > 0}" value="({0,number,###,###,###.00})">
+                                    <apex:param value="{!tongExpense}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!bill.AmountIclFCY}" rendered="{!bill.AmountIclFCY > 0}"/> -->
+                                <apex:outputText rendered="{!tongExpense < 0}" value="{0,number,###,###,###.00}">
+                                    <apex:param value="{!-tongExpense}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="({!tongExpense})" rendered="{!tongExpense > 0}"/>
+                                <apex:outputText value="{!-tongExpense}" rendered="{!tongExpense < 0}"/> -->
+                                <!-- <apex:outputText value="{!tongExpense}"/> -->
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <apex:outputText style="font-weight: bolder;" value="TOTAL"/>
+                            </td>
+                            
+                            <td></td>
+                            <td></td>
+                            <td style="text-align: right;font-weight: bolder;border-bottom: 3px solid black;">
+                                <apex:outputText value="{0,number,###,###,###.00}">
+                                    <apex:param value="{!FinalTotal}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!FinalTotal}"/> -->
+                            </td>
+                            <td></td>
+                            <td style="text-align: right;font-weight: bolder;border-bottom: 3px solid black;">
+                                <apex:outputText value="{0,number,###,###,###.00}">
+                                    <apex:param value="{!FinalTotal}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!FinalTotal}"/> -->
+                            </td>
+                        </tr>
+                        <!-- END EXPENSE -->
+                    </table>
+                </apex:outputPanel>
+
+
+            <!-- End Customer -->
+                <!-- Start Customer Only -->
+                <apex:outputPanel rendered="{!columnOptions2 == 'Customers' &&(clsCustomer != null && customer == null)}">
+                    <table style="overflow-x: scroll;border-collapse: collapse;width: 100%;">
+                        <tr style="background-color: #f5f2f2">
+                            <td></td>
+                            <apex:repeat value="{!listFileNo}" var="fileno">
+                                <td style="width: 120px;text-align: center;">
+
+                                    <apex:outputText value="{!fileno}" />
+                                    <br/>
+                                    <apex:outputText value="{!clsCustomer}"/>
+
+                                    <div style="float: right">
+                                        <div style=" border-bottom: 1px solid black;width: 105px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                        </tr>
+                        <tr>
+                            <td style="float: left; font-weight: bold">
+                                <apex:outputText value="Ordinary Income//Expense" />
+                            </td>
+                        </tr>
+                        <!-- INCOME -->
+                        <tr>
+                            <td style="float: left; margin-left: 15px; font-weight: bold">
+                                <apex:outputText value="Income" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflIncome}" var="bill">
+                            <tr>
+                                <td style="float: left;margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!amount}"/> -->
+                                    </td>
+
+                                </apex:repeat>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr style="background-color: #f5f2f2">
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Income"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalIncome}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 105px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+                        </tr>
+                        <!-- COGS -->
+
+                        <tr>
+                            <td style="float: left; margin-left: 15px; font-weight: bold">
+                                <apex:outputText value="Cost of Goods Sold" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflCost}" var="bill">
+                            <tr>
+                                <td style="float: left;margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                       
+                                    </td>
+
+                                </apex:repeat>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr style="background-color: #f5f2f2">
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total COGS"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalCost}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 105px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+                        </tr>
+                        <tr style="background-color: #f5f2f2">
+                            <br/>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Gross Profit" />
+                            </td>
+                            <apex:repeat value="{!GrossProfit}" var="item">
+                                <td>
+                                    <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+                            <!-- <td style="float: right">
+                                <apex:outputText style="float: right" value="{!GrossTotal}" />
+                            </td> -->
+                        </tr>
+                        <!-- Expense -->
+                        
+                        <tr>
+                            <td style="float: left; margin-left: 15px; font-weight: bold">
+                                <apex:outputText value="Expense" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflRepense}" var="bill">
+                            <tr>
+                                <td style="float: left;margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                       
+                                    </td>
+
+                                </apex:repeat>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr style="background-color: #f5f2f2">
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Expense"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalExpense}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 105px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                <!-- End Custommer only -->
+            <!-- Start Days -->
+                <apex:outputPanel rendered="{!columnOptions2 == 'Days'}">
+                    <table style="overflow-x: scroll">
+                        <!-- <apex:outputPanel rendered="{!columnOptions2 == 'Months'}">
+                            <tr>
+                                <td></td>                        
+                                <apex:repeat value="{!listMonth2}" var="date"> 
+                                    <td style="width: 60px;text-align: center;">
+                         
+                                            <apex:outputText value="{!date}" />
+                             
+                                        
+                                        <div style="float: right">
+                                            <div style=" border-bottom: 1px solid black;width: 55px;">
+        
+                                            </div>
+                                        </div>
+                                    </td>
+                                </apex:repeat>
+                                <td style="width: 60px;text-align: center;">
+                                    <apex:outputText value="TOTAL"/>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!columnOptions2 == 'Days'}">
+                            <tr>
+                                <td></td>                        
+                                <apex:repeat value="{!listDate}" var="date1"> 
+                                    <td style="width: 60px;text-align: center;">
+                                        <apex:outputText value="{0, date,MMM-dd}">
+                                            <apex:param value="{!date1}" />
+                                        </apex:outputText>
+                                        
+                                        <div style="float: right">
+                                            <div style=" border-bottom: 1px solid black;width: 55px;">
+        
+                                            </div>
+                                        </div>
+                                    </td>
+                                </apex:repeat>
+                                <td style="width: 60px;text-align: center;">
+                                    <apex:outputText value="TOTAL"/>
+                                </td>
+                            </tr>
+                        </apex:outputPanel> -->
+                        <tr>
+                            <td></td>
+                            <apex:repeat value="{!listDate}" var="date1">
+                                <td style="width: 60px;text-align: center;">
+                                    <apex:outputText value="{0, date,MMM-dd}">
+                                        <apex:param value="{!date1}" />
+                                    </apex:outputText>
+
+                                    <div style="float: right">
+                                        <div style=" border-bottom: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                            <td style="width: 60px;text-align: center;">
+                                <apex:outputText value="TOTAL" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="float: left; font-weight: bold">
+                                <apex:outputText value="Ordinary Income//Expense" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="float: left; margin-left: 15px; font-weight: bold">
+                                <apex:outputText value="Income" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflIncome}" var="bill">
+                            <tr>
+                                <td style="float: left;margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!amount}"/> -->
+                                    </td>
+
+                                </apex:repeat>
+                                <td style="float: right">
+                                    <apex:outputText value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Income"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalIncome}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!IncomeTotal}" />
+
+                            </td>
+
+                        </tr>
+                        <!-- COGS -->
+
+                        <tr>
+                            <td>
+                                <apex:outputText style="float: left; margin-left: 15px;font-weight: bold" value="Cost of Goods Sold"
+                                />
+                            </td>
+
+                        </tr>
+                        <apex:repeat value="{!billresuflCost}" var="bill">
+                            <tr>
+                                <td style="float: left; margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                    </td>
+
+                                </apex:repeat>
+                                <td>
+                                    <apex:outputText style="float: right" value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total COGS"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalCost}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!CostTotal}" />
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <br/>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Gross Profit" />
+                            </td>
+                            <apex:repeat value="{!GrossProfit}" var="item">
+                                <td>
+                                    <apex:outputText rendered="{!item > 0}" style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+                                    <apex:outputText rendered="{!item < 0}" style="float: right;color: red;" value="({0,number,###,###,###,##0.00})">
+                                        <apex:param value="{!-item}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+                            <td style="float: right">
+                                <apex:outputText style="float: right" value="{!GrossTotal}" />
+                            </td>
+                        </tr>
+                        <!-- Expense -->
+                        <tr>
+                            <td>
+                                <apex:outputText style="float: left; margin-left: 15px;font-weight: bold" value="Expense" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflRepense}" var="bill">
+                            <tr>
+                                <td style="float: left; margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                    </td>
+
+                                </apex:repeat>
+                                <td>
+                                    <apex:outputText style="float: right" value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Expense"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalExpense}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!ExpenseTotal}" />
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <br/>
+                        <tr>
+
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Net Ordinary Income" />
+                            </td>
+                            <apex:repeat value="{!NetOrdinary}" var="item">
+                                <td>
+                                    <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+
+                                </td>
+                            </apex:repeat>
+                            <td>
+                                <apex:outputText style="float: right" value="{!NetTotal}" />
+                            </td>
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                <!-- End Days -->
+                <!-- Start Months -->
+                <apex:outputPanel rendered="{!columnOptions2 == 'Months'}">
+                    <table style="overflow-x: scroll; width: 100%;">
+                        <!-- <apex:outputPanel rendered="{!columnOptions2 == 'Months'}">
+                            <tr>
+                                <td></td>                        
+                                <apex:repeat value="{!listMonth2}" var="date"> 
+                                    <td style="width: 60px;text-align: center;">
+                         
+                                            <apex:outputText value="{!date}" />
+                             
+                                        
+                                        <div style="float: right">
+                                            <div style=" border-bottom: 1px solid black;width: 55px;">
+        
+                                            </div>
+                                        </div>
+                                    </td>
+                                </apex:repeat>
+                                <td style="width: 60px;text-align: center;">
+                                    <apex:outputText value="TOTAL"/>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!columnOptions2 == 'Days'}">
+                            <tr>
+                                <td></td>                        
+                                <apex:repeat value="{!listDate}" var="date1"> 
+                                    <td style="width: 60px;text-align: center;">
+                                        <apex:outputText value="{0, date,MMM-dd}">
+                                            <apex:param value="{!date1}" />
+                                        </apex:outputText>
+                                        
+                                        <div style="float: right">
+                                            <div style=" border-bottom: 1px solid black;width: 55px;">
+        
+                                            </div>
+                                        </div>
+                                    </td>
+                                </apex:repeat>
+                                <td style="width: 60px;text-align: center;">
+                                    <apex:outputText value="TOTAL"/>
+                                </td>
+                            </tr>
+                        </apex:outputPanel> -->
+                        <tr>
+                            <td></td>
+                            <apex:repeat value="{!listMonthOfYear2}" var="date">
+                                <td style="width: 60px;text-align: center;">
+
+                                    <apex:outputText value="{!date}" />
+
+
+                                    <div style="float: right">
+                                        <div style=" border-bottom: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                            <td style="width: 60px;text-align: center;">
+                                <apex:outputText value="TOTAL" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="float: left; font-weight: bold">
+                                <apex:outputText value="Ordinary Income//Expense" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="float: left; margin-left: 15px; font-weight: bold">
+                                <apex:outputText value="Income" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflIncome}" var="bill">
+                            <tr>
+                                <td style="float: left;margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!amount}"/> -->
+                                    </td>
+
+                                </apex:repeat>
+                                <td style="float: right">
+                                    <apex:outputText value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Income"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalIncome}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!IncomeTotal}" />
+
+                            </td>
+
+                        </tr>
+                        <!-- COGS -->
+
+                        <tr>
+                            <td>
+                                <apex:outputText style="float: left; margin-left: 15px;font-weight: bold" value="Cost of Goods Sold"
+                                />
+                            </td>
+
+                        </tr>
+                        <apex:repeat value="{!billresuflCost}" var="bill">
+                            <tr>
+                                <td style="float: left; margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                    </td>
+
+                                </apex:repeat>
+                                <td>
+                                    <apex:outputText style="float: right" value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total COGS"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalCost}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!CostTotal}" />
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <br/>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Gross Profit" />
+                            </td>
+                            <apex:repeat value="{!GrossProfit}" var="item">
+                                <td>
+                                    <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+                            <td style="float: right">
+                                <apex:outputText style="float: right" value="{!GrossTotal}" />
+                            </td>
+                        </tr>
+                        <!-- Expense -->
+                        <tr>
+                            <td>
+                                <apex:outputText style="float: left; margin-left: 15px;font-weight: bold" value="Expense" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflRepense}" var="bill">
+                            <tr>
+                                <td style="float: left; margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                    </td>
+
+                                </apex:repeat>
+                                <td>
+                                    <apex:outputText style="float: right" value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Expense"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalExpense}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!ExpenseTotal}" />
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <br/>
+                        <tr>
+
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Net Ordinary Income" />
+                            </td>
+                            <apex:repeat value="{!NetOrdinary}" var="item">
+                                <td>
+                                    <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+
+                                </td>
+                            </apex:repeat>
+                            <td>
+                                <apex:outputText style="float: right" value="{!NetTotal}" />
+                            </td>
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                <!-- End Months -->
+                <!-- Start Years -->
+                <apex:outputPanel rendered="{!columnOptions2 == 'Years'}">
+                    <table style="overflow-x: scroll; width: 100%;">
+                        <!-- <apex:outputPanel rendered="{!columnOptions2 == 'Months'}">
+                            <tr>
+                                <td></td>                        
+                                <apex:repeat value="{!listMonth2}" var="date"> 
+                                    <td style="width: 60px;text-align: center;">
+                         
+                                            <apex:outputText value="{!date}" />
+                             
+                                        
+                                        <div style="float: right">
+                                            <div style=" border-bottom: 1px solid black;width: 55px;">
+        
+                                            </div>
+                                        </div>
+                                    </td>
+                                </apex:repeat>
+                                <td style="width: 60px;text-align: center;">
+                                    <apex:outputText value="TOTAL"/>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!columnOptions2 == 'Days'}">
+                            <tr>
+                                <td></td>                        
+                                <apex:repeat value="{!listDate}" var="date1"> 
+                                    <td style="width: 60px;text-align: center;">
+                                        <apex:outputText value="{0, date,MMM-dd}">
+                                            <apex:param value="{!date1}" />
+                                        </apex:outputText>
+                                        
+                                        <div style="float: right">
+                                            <div style=" border-bottom: 1px solid black;width: 55px;">
+        
+                                            </div>
+                                        </div>
+                                    </td>
+                                </apex:repeat>
+                                <td style="width: 60px;text-align: center;">
+                                    <apex:outputText value="TOTAL"/>
+                                </td>
+                            </tr>
+                        </apex:outputPanel> -->
+                        <tr>
+                            <td></td>
+                            <apex:repeat value="{!listYear2}" var="date">
+                                <td style="width: 60px;text-align: center;">
+
+                                    <apex:outputText value="{!date}" />
+
+
+                                    <div style="float: right">
+                                        <div style=" border-bottom: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                            <td style="width: 60px;text-align: center;">
+                                <apex:outputText value="TOTAL" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="float: left; font-weight: bold">
+                                <apex:outputText value="Ordinary Income//Expense" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="float: left; margin-left: 15px; font-weight: bold">
+                                <apex:outputText value="Income" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflIncome}" var="bill">
+                            <tr>
+                                <td style="float: left;margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!amount}"/> -->
+                                    </td>
+
+                                </apex:repeat>
+                                <td style="float: right">
+                                    <apex:outputText value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Income"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalIncome}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!IncomeTotal}" />
+
+                            </td>
+
+                        </tr>
+                        <!-- COGS -->
+
+                        <tr>
+                            <td>
+                                <apex:outputText style="float: left; margin-left: 15px;font-weight: bold" value="Cost of Goods Sold"
+                                />
+                            </td>
+
+                        </tr>
+                        <apex:repeat value="{!billresuflCost}" var="bill">
+                            <tr>
+                                <td style="float: left; margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                    </td>
+
+                                </apex:repeat>
+                                <td>
+                                    <apex:outputText style="float: right" value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total COGS"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalCost}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!CostTotal}" />
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <br/>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Gross Profit" />
+                            </td>
+                            <apex:repeat value="{!GrossProfit}" var="item">
+                                <td>
+                                    <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+                            <td style="float: right">
+                                <apex:outputText style="float: right" value="{!GrossTotal}" />
+                            </td>
+                        </tr>
+                        <!-- Expense -->
+                        <tr>
+                            <td>
+                                <apex:outputText style="float: left; margin-left: 15px;font-weight: bold" value="Expense" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflRepense}" var="bill">
+                            <tr>
+                                <td style="float: left; margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                    </td>
+
+                                </apex:repeat>
+                                <td>
+                                    <apex:outputText style="float: right" value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Expense"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalExpense}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!ExpenseTotal}" />
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <br/>
+                        <tr>
+
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Net Ordinary Income" />
+                            </td>
+                            <apex:repeat value="{!NetOrdinary}" var="item">
+                                <td>
+                                    <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+
+                                </td>
+                            </apex:repeat>
+                            <td>
+                                <apex:outputText style="float: right" value="{!NetTotal}" />
+                            </td>
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                <!-- End Years -->
+
+                <!-- Start Quarters -->
+                <apex:outputPanel rendered="{!columnOptions2 == 'Quarters'}">
+                    <table style="overflow-x: scroll; width: 100%;">
+                        <!-- <apex:outputPanel rendered="{!columnOptions2 == 'Months'}">
+                            <tr>
+                                <td></td>                        
+                                <apex:repeat value="{!listMonth2}" var="date"> 
+                                    <td style="width: 60px;text-align: center;">
+                         
+                                            <apex:outputText value="{!date}" />
+                             
+                                        
+                                        <div style="float: right">
+                                            <div style=" border-bottom: 1px solid black;width: 55px;">
+        
+                                            </div>
+                                        </div>
+                                    </td>
+                                </apex:repeat>
+                                <td style="width: 60px;text-align: center;">
+                                    <apex:outputText value="TOTAL"/>
+                                </td>
+                            </tr>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!columnOptions2 == 'Days'}">
+                            <tr>
+                                <td></td>                        
+                                <apex:repeat value="{!listDate}" var="date1"> 
+                                    <td style="width: 60px;text-align: center;">
+                                        <apex:outputText value="{0, date,MMM-dd}">
+                                            <apex:param value="{!date1}" />
+                                        </apex:outputText>
+                                        
+                                        <div style="float: right">
+                                            <div style=" border-bottom: 1px solid black;width: 55px;">
+        
+                                            </div>
+                                        </div>
+                                    </td>
+                                </apex:repeat>
+                                <td style="width: 60px;text-align: center;">
+                                    <apex:outputText value="TOTAL"/>
+                                </td>
+                            </tr>
+                        </apex:outputPanel> -->
+                        <tr>
+                            <td></td>
+                            <apex:repeat value="{!listQuarterOfYear2}" var="date1">
+                                <td style="width: 60px;text-align: center;">
+                                    <!-- <apex:outputText value="{0, date,MMM-dd}"> -->
+                                    <apex:outputText value="{!date1}" />
+                                    <!-- </apex:outputText> -->
+
+                                    <div style="float: right">
+                                        <div style=" border-bottom: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                            <td style="width: 60px;text-align: center;">
+                                <apex:outputText value="TOTAL" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="float: left; font-weight: bold">
+                                <apex:outputText value="Ordinary Income//Expense" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="float: left; margin-left: 15px; font-weight: bold">
+                                <apex:outputText value="Income" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflIncome}" var="bill">
+                            <tr>
+                                <td style="float: left;margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!amount}"/> -->
+                                    </td>
+
+                                </apex:repeat>
+                                <td style="float: right">
+                                    <apex:outputText value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Income"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalIncome}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!IncomeTotal}" />
+
+                            </td>
+
+                        </tr>
+                        <!-- COGS -->
+
+                        <tr>
+                            <td>
+                                <apex:outputText style="float: left; margin-left: 15px;font-weight: bold" value="Cost of Goods Sold"
+                                />
+                            </td>
+
+                        </tr>
+                        <apex:repeat value="{!billresuflCost}" var="bill">
+                            <tr>
+                                <td style="float: left; margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                    </td>
+
+                                </apex:repeat>
+                                <td>
+                                    <apex:outputText style="float: right" value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total COGS"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalCost}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!CostTotal}" />
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <br/>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Gross Profit" />
+                            </td>
+                            <apex:repeat value="{!GrossProfit}" var="item">
+                                <td>
+                                    <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+                            <td style="float: right">
+                                <apex:outputText style="float: right" value="{!GrossTotal}" />
+                            </td>
+                        </tr>
+                        <!-- Expense -->
+                        <tr>
+                            <td>
+                                <apex:outputText style="float: left; margin-left: 15px;font-weight: bold" value="Expense" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflRepense}" var="bill">
+                            <tr>
+                                <td style="float: left; margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                    </td>
+
+                                </apex:repeat>
+                                <td>
+                                    <apex:outputText style="float: right" value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Expense"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalExpense}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!ExpenseTotal}" />
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <br/>
+                        <tr>
+
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Net Ordinary Income" />
+                            </td>
+                            <apex:repeat value="{!NetOrdinary}" var="item">
+                                <td>
+                                    <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+
+                                </td>
+                            </apex:repeat>
+                            <td>
+                                <apex:outputText style="float: right" value="{!NetTotal}" />
+                            </td>
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                <!-- End Quarters -->
+                <!-- Start Weeks -->
+                <apex:outputPanel rendered="{!columnOptions2 == 'Weeks'}">
+                    <table style="overflow-x: scroll; width: 100%;">
+                        <!-- <apex:outputPanel rendered="{!columnOptions2 == 'Months'}">
+                                            <tr>
+                                                <td></td>                        
+                                                <apex:repeat value="{!listMonth2}" var="date"> 
+                                                    <td style="width: 60px;text-align: center;">
+                                         
+                                                            <apex:outputText value="{!date}" />
+                                             
+                                                        
+                                                        <div style="float: right">
+                                                            <div style=" border-bottom: 1px solid black;width: 55px;">
+                        
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </apex:repeat>
+                                                <td style="width: 60px;text-align: center;">
+                                                    <apex:outputText value="TOTAL"/>
+                                                </td>
+                                            </tr>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!columnOptions2 == 'Days'}">
+                                            <tr>
+                                                <td></td>                        
+                                                <apex:repeat value="{!listDate}" var="date1"> 
+                                                    <td style="width: 60px;text-align: center;">
+                                                        <apex:outputText value="{0, date,MMM-dd}">
+                                                            <apex:param value="{!date1}" />
+                                                        </apex:outputText>
+                                                        
+                                                        <div style="float: right">
+                                                            <div style=" border-bottom: 1px solid black;width: 55px;">
+                        
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </apex:repeat>
+                                                <td style="width: 60px;text-align: center;">
+                                                    <apex:outputText value="TOTAL"/>
+                                                </td>
+                                            </tr>
+                                        </apex:outputPanel> -->
+                        <tr>
+                            <td></td>
+                            <apex:repeat value="{!listE2}" var="date1">
+                                <td style="width: 60px;text-align: center;">
+                                    <!-- <apex:outputText value="{0, date,MMM-dd}"> -->
+                                    <apex:outputText value="{!date1}" />
+                                    <!-- </apex:outputText> -->
+
+                                    <div style="float: right">
+                                        <div style=" border-bottom: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                            <td style="width: 60px;text-align: center;">
+                                <apex:outputText value="TOTAL" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="float: left; font-weight: bold">
+                                <apex:outputText value="Ordinary Income//Expense" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="float: left; margin-left: 15px; font-weight: bold">
+                                <apex:outputText value="Income" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflIncome}" var="bill">
+                            <tr>
+                                <td style="float: left;margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                        <!-- <apex:outputText value="{!amount}"/> -->
+                                    </td>
+
+                                </apex:repeat>
+                                <td style="float: right">
+                                    <apex:outputText value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Income"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalIncome}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!IncomeTotal}" />
+
+                            </td>
+
+                        </tr>
+                        <!-- COGS -->
+
+                        <tr>
+                            <td>
+                                <apex:outputText style="float: left; margin-left: 15px;font-weight: bold" value="Cost of Goods Sold"
+                                />
+                            </td>
+
+                        </tr>
+                        <apex:repeat value="{!billresuflCost}" var="bill">
+                            <tr>
+                                <td style="float: left; margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                    </td>
+
+                                </apex:repeat>
+                                <td>
+                                    <apex:outputText style="float: right" value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total COGS"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalCost}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!CostTotal}" />
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <br/>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Gross Profit" />
+                            </td>
+                            <apex:repeat value="{!GrossProfit}" var="item">
+                                <td>
+                                    <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+                            <td style="float: right">
+                                <apex:outputText style="float: right" value="{!GrossTotal}" />
+                            </td>
+                        </tr>
+                        <!-- Expense -->
+                        <tr>
+                            <td>
+                                <apex:outputText style="float: left; margin-left: 15px;font-weight: bold" value="Expense" />
+                            </td>
+                        </tr>
+                        <apex:repeat value="{!billresuflRepense}" var="bill">
+                            <tr>
+                                <td style="float: left; margin-left: 30px;">
+                                    <apex:outputText value="{!bill.ChartName}" />
+                                </td>
+                                <apex:repeat value="{!bill.amounts}" var="amount">
+
+                                    <td>
+                                        <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                            <apex:param value="{!amount}" />
+                                        </apex:outputText>
+                                    </td>
+
+                                </apex:repeat>
+                                <td>
+                                    <apex:outputText style="float: right" value="{!bill.total}" />
+                                </td>
+                            </tr>
+
+                        </apex:repeat>
+                        <tr>
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left; margin-left: 15px;" value="Total Expense"
+                                />
+                            </td>
+                            <apex:repeat value="{!TotalExpense}" var="total">
+                                <td>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                    <apex:outputText style="float: right;" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!total}" />
+                                    </apex:outputText>
+                                    <div style="float: right">
+                                        <div style=" border-top: 1px solid black;width: 55px;">
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </apex:repeat>
+                            <td>
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                                <apex:outputText style="float: right" value="{!ExpenseTotal}" />
+                                <div style="float: right">
+                                    <div style=" border-top: 1px solid black;width: 55px;">
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <br/>
+                        <tr>
+
+                            <td>
+                                <apex:outputText style="font-weight: bolder;float: left;" value="Net Ordinary Income" />
+                            </td>
+                            <apex:repeat value="{!NetOrdinary}" var="item">
+                                <td>
+                                    <apex:outputText style="float: right" value="{0,number,###,###,###,##0.00}">
+                                        <apex:param value="{!item}" />
+                                    </apex:outputText>
+
+                                </td>
+                            </apex:repeat>
+                            <td>
+                                <apex:outputText style="float: right" value="{!NetTotal}" />
+                            </td>
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                <!-- End Weeks -->
+                <!-- <table>
+                    
+                    <tr>
+                        <td>
+                            <p>Ordinary Income//Expense</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                Income
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <apex:repeat value="{!lstIncome}" var="income">
+                            <tr>
+                                <td>
+                                    <apex:outputText value="{!income.Name}"/>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        <td>
+                            <apex:repeat value="{!billresuflIncome}" var="bill">
+                            <apex:repeat value="{!bill.amounts}" var="amount">
+                  
+                                    <td>
+                                        <apex:outputText escape="false" value="{!amount}"/>
+                                    </td>       
+                                
+                            </apex:repeat>
+                            <br/>
+                        </apex:repeat>
+                        </td>
+                    </tr>
+                    
+                    
+                    <tr>
+                        <td><p>Total Income</p></td>
+                    </tr>
+                   
+                    <tr>
+                        <td>
+                            <p>Cost of Goods Sold</p>
+                        </td>
+                    </tr>
+                    <apex:repeat value="{!lstCost}" var="cost">
+                        <tr>
+                            <td>
+                                <apex:outputText value="{!cost.Name}"/>
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                    <tr>
+                        <td>
+                            <p>Total COGS</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Gross Profit</p>
+                        </td>
+                    </tr>
+                  
+                    <tr>
+                        <td>
+                            <p>
+                                Expense
+                            </p>
+                        </td>
+                    </tr>
+                    <apex:repeat value="{!lstCost}" var="cost">
+                        <tr>
+                            <td>
+                                <apex:outputText value="{!cost.Name}"/>
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                    <tr>
+                        <td><p>Total Expense</p></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Net Ordinary Income</p>
+                        </td>
+                    </tr>
+                </table> -->
+            </div>
+            <!-- <script>
+                const change1 =document.querySelector('#change');
+                console.log('123 :'+change1);
+                const selectChange1 = document.querySelector('#selectChange');
+                selectChange1.addEventlistener('click', ()=>{
+                    change1.style.display = 'block';
+                })
+            </script> -->
+        </apex:outputPanel>
+        <apex:form >
+            <apex:actionFunction name="loadData" action="{!loadData}" reRender="main, main2">
+                <apex:param name="dateFrom" value="" />
+                <apex:param name="dateTo" value="" />
+                <apex:param name="selectedval" value="" />
+            </apex:actionFunction>
+            <apex:actionFunction name="loadCustomer" action="{!loadCustomer}" reRender="main">
+                <apex:param name="customer" value="" />
+                <apex:param name="clsCustomer" value="" />
+                <apex:param name="dateFrom" value="" />
+                <apex:param name="dateTo" value="" />
+                <apex:param name="selectedDate" value="" />
+            </apex:actionFunction>
+            <apex:actionFunction name="SaveOnchange" action="{!saveonchange}" reRender="dateChange">
+                <apex:param name="value" value="" />
+            </apex:actionFunction>
+        </apex:form>
+    </body>
+</apex:page>

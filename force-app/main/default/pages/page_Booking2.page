@@ -1,0 +1,95 @@
+<apex:page controller="BookingController" renderAs="pdf">
+        <head>
+        <style>
+        </style>
+        </head>
+        <body>
+          
+        <img style="width:128%; height:160%; margin-left:-120px; margin-top:-150px;" src="https://swift-freight-logistics--swift01.sandbox.file.force.com/servlet/servlet.FileDownload?file=0151y000000alyG"> 
+        
+        <table style = "border-collapse: collapse; margin-left:-2px; margin-right:0px; margin-top:-196mm; width:349px;">           
+            <tr style ="height:82px; font-size:8px; margin-left: 2px;"> 
+                <td style="vertical-align: top; font-family:Arial, Helvetica, sans-serif;"> <apex:outputField value="{!Booking.clofor_com_cfs__ADDRESS_ON_B_L__c}"/>
+                </td>
+            </tr>
+        </table>
+
+        <table style = "border-collapse: collapse; margin-left:-2px; margin-right:0px; margin-top: 2.6mm; width:349px;">           
+            <tr style ="height:82px; font-size:8px; margin-left: 2px;"> 
+                <td style="vertical-align: top; font-family:Arial, Helvetica, sans-serif;"><apex:outputField value="{!Booking.clofor_com_cfs__CNEE_ADDRESS_ON_B_L__c}"/> 
+                </td>
+            </tr>
+        </table>
+
+        <table style = "border-collapse: collapse; margin-left:-2px; margin-right:0px; margin-top: 3.5mm; width:707px;">           
+            <tr style ="height:10px; font-family:Arial, Helvetica, sans-serif;"> 
+                <td style="font-size: 8px; width: 349px; vertical-align: top;" rowspan = "6"><apex:outputField value="{!Booking.clofor_com_cfs__NOTIFY_ADDRESS_ON_B_L__c}"/> </td>
+                 <td style="font-size:8px; height:10px; width: 110px;"></td>
+                 <td style="font-size:8px; height:10px; width: 260px;"> 
+                    <apex:outputText value="{0,date, MMM-d-yyyy}">
+                    <apex:param value="{!Booking.clofor_com_cfs__BookingDate__c}" /> 
+                    </apex:outputText> 
+                </td>
+            </tr>
+            <tr > 
+                 <td > </td>
+                 <td style="font-size:8px; height:12px; font-family:Arial, Helvetica, sans-serif;" colspan = "2"><apex:outputText value="{0,date, MMM-d-yyyy}">
+                    <apex:param value="{!Booking.Cargo_Ready_Date__c}" /> 
+                        </apex:outputText></td>
+            </tr>
+            <tr > 
+                 <td></td>
+                 <td style="font-size:8px; height:14px; font-family:Arial, Helvetica, sans-serif;" colspan = "2"><apex:outputText value="{0,date, MMM-d-yyyy}">
+                    <apex:param value="{!Booking.Document_Ready_Date__c}" /> 
+                        </apex:outputText></td>
+            </tr>
+            <tr > 
+                 <td></td>
+                 <td style="font-size:8px; height:13px; font-family:Arial, Helvetica, sans-serif;" colspan = "2"> <apex:outputText value="{0,date, MMM-d-yyyy}">
+                    <apex:param value="{!Booking.clofor_com_cfs__ETD__c}" /> 
+                        </apex:outputText></td>
+            </tr>
+            <tr > 
+                 <td></td>
+                 <td style="font-size:8px; height:13px; font-family:Arial, Helvetica, sans-serif;" colspan = "2"><apex:outputText value="{!Booking.clofor_com_cfs__PriceTerms__c}"/></td>
+            </tr>    
+            <tr > 
+                 <td></td>
+                 <td style="font-size:8px; height:14px; font-family:Arial, Helvetica, sans-serif;" colspan = "2"><apex:outputText value="{!Booking.clofor_com_cfs__LoadLocation__c}"/></td>
+            </tr>  
+ 
+        </table> 
+
+        <table style = "border-collapse: collapse; margin-left:-1px; margin-right:0px; margin-top: 3.1mm;">
+            <tr style = "font-size: 8px; height: 28px; font-family:Arial, Helvetica, sans-serif;"> 
+                <td style = "width:93px;"><apex:outputText value="{!Booking.clofor_com_cfs__PlaceOfReceiptDetailPrint__c}"/></td>
+                <td style = "width:155px;"><apex:outputText value="{!Booking.clofor_com_cfs__PortOfLoadingDetailPrint__c}"/></td>
+                <td style = "width:108px;"><apex:outputText value="{!Booking.clofor_com_cfs__PortOfDischargeDetailPrint__c}"/></td>
+                <td style = "width:93px;"><apex:outputText value="{!Booking.clofor_com_cfs__PlaceOfDeliveryDetailPrint__c}"/></td>
+                <td style = "width:149px; text-align:center;"><apex:outputText value="{!Booking.clofor_com_cfs__CARGO_TYPE__c}"/></td>
+                <td style = "width:102px;"></td>
+            </tr>
+        </table>
+
+        <table style = "border-collapse: collapse; margin-left:0px; margin-right:0px; margin-top:3.5mm;">
+            <tr style = "font-size: 8px; height:250px; font-family:Arial, Helvetica, sans-serif;"> 
+                <td style = "vertical-align: top; width:93px;"><apex:outputText value="{!Booking.clofor_com_cfs__HouseBookingNo__c}"/></td>
+                <td style = "vertical-align: top; width:155px;"><apex:outputText value="{!Booking.clofor_com_cfs__Marks_and_Numbers__c}"/></td>
+                <td style = "vertical-align: top; width:107px;"><apex:outputText value="{!Booking.clofor_com_cfs__Item__c}"/></td>
+                <td style = "vertical-align: top; width:93px; text-align:center;"><apex:outputText value="{!Booking.clofor_com_cfs__carton__c} {!Booking.clofor_com_cfs__UnitType__c}"/>   </td>
+                <td style = "vertical-align: top; width:149px; text-align:center;"><apex:outputText value="{!Booking.clofor_com_cfs__weight__c}"/></td>
+                <td style = "vertical-align: top; width:102px; text-align:center;"><apex:outputText value="{!Booking.clofor_com_cfs__CBM__c}"/></td>
+            </tr>
+        </table>
+
+        <table style = "border-collapse: collapse; margin-left:0px; margin-right:0px; margin-top: 11.3mm;">
+            <tr style="font-size: 8px; height:12px; font-family:Arial, Helvetica, sans-serif;">   
+                <td style = "width:356px;"></td>
+                <td style = "width:90px; font-weight:bold; font-size: 8px; text-align:right;"><apex:outputText value="{!SumUnit}"/></td>
+                <td style = "width:148px; font-weight:bold; font-size: 8px; text-align:right;"><apex:outputText style="margin-right: 1px;" value="{!SumWeight}"/></td>
+                <td style = "width:100px; font-weight:bold; font-size: 8px; text-align:right;"><apex:outputText value="{!SumVolume}"/></td>
+            </tr>
+        </table>
+        </img> 
+        </body>
+</apex:page>

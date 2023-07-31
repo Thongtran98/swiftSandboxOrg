@@ -1,0 +1,162 @@
+<aura:component
+  controller="AddMultipleBillController"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+  access="global"
+>
+  <aura:attribute name="billList" type="clofor_com_cfs__AnkenMeisai__c[]" />
+  <aura:handler name="init" value="{!this}" action="{!c.doinit}" />
+  <aura:html tag="style">
+    .cuf-content { padding: 0 0rem !important; } .slds-p-around--medium {
+    padding: 0rem !important; } .slds-modal__content{ height:unset !important;
+    max-height:unset !important; } .slds-modal__container{ max-width:95rem
+    !important; width:100% !important; }
+  </aura:html>
+
+  <lightning:spinner aura:id="spinner" class="slds-hide" />
+  <aura:iteration items="{!v.billList}" var="bill" indexVar="index">
+            <lightning:recordEditForm
+              class="iteration"
+              aura:id="recordEditForm"
+              objectApiName="clofor_com_cfs__AnkenMeisai__c"
+            >
+          <div class="slds-grid slds-gutters" >
+             <div class="slds-col slds-gutters_x-small" style="min-width: 8%; max-width: 8%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Service Name</span>
+              <lightning:inputField
+                  aura:id="field"
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__Tariff__c"
+                  value="{!bill.clofor_com_cfs__Tariff__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Charge Quantity</span>
+              <lightning:inputField
+                  aura:id="field"
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__Suryo__c"
+                  value="{!bill.clofor_com_cfs__Suryo__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small" style="min-width: 7%; max-width: 7%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Charge Unit</span>
+              <lightning:inputField
+                  aura:id="field"
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__ChargeUnit__c"
+                  value="{!bill.clofor_com_cfs__ChargeUnit__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Description</span>
+              <lightning:inputField
+                  aura:id="field"
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__Description__c"
+                  value="{!bill.clofor_com_cfs__Description__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small" style="min-width: 9%; max-width: 9%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Invoice to</span>
+                <lightning:inputField
+                  style="text-align: center;"
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__Seikyusaki__c"
+                  value="{!bill.clofor_com_cfs__Seikyusaki__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Unit Price of Selling</span>
+              <lightning:inputField
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__SellTankaJPY__c"
+                  value="{!bill.clofor_com_cfs__SellTankaJPY__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small" style="min-width: 8%; max-width: 8%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Currency-Selling</span>
+              <lightning:inputField
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__curr__c"
+                  value="{!bill.clofor_com_cfs__curr__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+                <span style="{!IF(index != 0,'visibility: hidden','')}">Selling Tax(%)</span>
+                <lightning:inputField
+                    variant="label-hidden"
+                    fieldName="clofor_com_cfs__TaxInitial__c"
+                    value="{!bill.clofor_com_cfs__TaxInitial__c}"
+                  />
+                  <!-- <lightning:input type="number" formatter="percent-fixed" step="0.01" maxlength="2" value="{!bill.clofor_com_cfs__TaxRate__c}"/> -->
+              </div>
+            <div class="slds-col slds-gutters_x-small" style="min-width: 9%; max-width: 9%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Payment to-Buying</span>
+              <lightning:inputField
+                variant="label-hidden"
+                  fieldName="clofor_com_cfs__PaymentTo__c"
+                  value="{!bill.clofor_com_cfs__PaymentTo__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small" >
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Unit Price of Buying</span>
+                <lightning:inputField
+                variant="label-hidden"
+                  fieldName="clofor_com_cfs__BuyTankaJPY__c"
+                  value="{!bill.clofor_com_cfs__BuyTankaJPY__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small" style="min-width: 8%; max-width: 8%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Currency-Buying</span>
+                <lightning:inputField
+                variant="label-hidden"
+                  fieldName="clofor_com_cfs__CurrencyBuying__c"
+                  value="{!bill.clofor_com_cfs__CurrencyBuying__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+                <span style="{!IF(index != 0,'visibility: hidden','')}">Buying Tax(%)</span>
+                  <lightning:inputField
+                  variant="label-hidden"
+                    fieldName="clofor_com_cfs__BuyTaxInitial__c"
+                    value="{!bill.clofor_com_cfs__BuyTaxInitial__c}"
+                  />
+              </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Action</span>
+              <div>
+                <a
+                    onclick="{!c.removeRecord}"
+                    data-record="{!index}"
+                  >
+                    <lightning:icon
+                      iconName="utility:delete"
+                      size="small"
+                      alternativeText="Delete"
+                    />
+                    <span class="slds-assistive-text">Delete</span>
+                  </a>
+              </div>
+            </div>
+          </div>
+        </lightning:recordEditForm>
+      </aura:iteration>  
+
+          <div
+            class="slds-align_absolute-center slds-p-top_small"
+            style="padding-top: 150px"
+          >
+            <lightning:button
+              variant="brand"
+              label="Add"
+              title="Brand action"
+              onclick="{!c.addRow}"
+            />
+            <lightning:button
+              variant="brand"
+              label="Submit"
+              title="Brand action"
+              onclick="{!c.saveBills}"
+            />
+          </div>
+</aura:component>

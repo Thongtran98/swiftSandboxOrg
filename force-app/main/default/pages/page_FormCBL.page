@@ -1,0 +1,115 @@
+<apex:page controller="FormHBLController" contentType="text/html" showHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    </html>
+    <head>
+        <style>
+            body{
+                font-size: 10px;
+            }
+        </style>
+
+    </head>
+    <body>
+        <img style="position:absolute; z-index:-2;height: 250mm;" align="middle" src="{!$Setup.clofor_com_cfs__Site_Custom_Settings__c.CLBTemplate__c}" width="100%"/>
+        <div style="position: absolute;height: 49mm;width: 64mm;left: 16mm;top: 24mm;">
+            <h6 style="position: absolute;top: -9.5mm;white-space: pre-line;left: -10.5mm;">{!shipment.clofor_com_cfs__ADDRESS_ON_B_L__c}</h6>
+
+            <h6 style="position: absolute;left: -10.5mm;top: 11.5mm;white-space: pre-line;">
+                {!shipment.clofor_com_cfs__CNEE_ADDRESS_ON_B_L__c}
+            </h6>
+
+        </div>
+        <div style="position: absolute;height: 8mm;width: 85mm;left: 80mm;top: 26mm;align-items: center;text-align: center;">
+            <h6 style="position: absolute;top: -14.5mm;left: 42mm;">{!shipment.clofor_com_cfs__HBL_Number_SEA_AIR__c}</h6>
+
+            <h6 class="logo" style="position: absolute;">
+                
+            </h6>
+        </div>
+        <div style="position: absolute;height: 27mm;width: 64mm;left: 16mm;top: 73mm;white-space: pre-line;">
+            <h6 style="position: absolute;bottom: 26mm;left: -10.5mm">{!shipment.clofor_com_cfs__NOTIFY_ADDRESS_ON_B_L__c}</h6>
+        </div>
+        <div style="position: absolute;height: 27mm;width: 83mm;left: 81mm;top: 74mm;"> 
+            <p style="position: absolute;bottom: 14mm;"></p>
+        </div>
+        <div style="position: absolute;height: 23mm;width: 29mm;left: 5.5mm;top: 83mm;">
+            <h6 style="position: absolute;bottom: 13mm;left: 0mm;">{!shipment.clofor_com_cfs__Vessle__c} {!shipment.clofor_com_cfs__Voy_No__c}</h6>
+
+            <h6 style="position: absolute;bottom: 7mm;left: 0mm;">
+                {!shipment.MTR_Vessel_and_Voy_No__c}
+            </h6>
+        </div>
+        <div style="position: absolute;height: 23mm;width: 34mm;left: 40.5mm;top: 83mm;">
+            <h6 style="position: absolute;bottom: 13mm;left: 0.5mm;">{!shipment.clofor_com_cfs__PortOfLoadingDetailPrint__c}</h6>
+
+            <h6 style="position: absolute;bottom: 7mm;left: 0.5mm;">
+                {!shipment.clofor_com_cfs__PortOfDischargeDetailPrint__c}
+            </h6>
+        </div>
+        <div style="position: absolute;height: 12mm;width: 50mm;left: 78mm;top: 83mm;">
+            <h6 style="position: absolute;bottom: 2mm;left: 0.5mm;">
+                {!shipment.clofor_com_cfs__Freight_Collect_Prepaid__c}
+            </h6>
+        </div>
+        <div style="position: absolute;height: 11mm;width: 26mm;left: 78mm;top: 90mm">
+            <h6 style="position: absolute;bottom: 2mm;left: 0.5mm;">
+                {!shipment.clofor_com_cfs__PlaceOfDeliveryDetailPrint__c}
+            </h6>
+        </div>
+        <div style="position: absolute;height: 11mm;width: 22mm;left: 121.5mm;top: 90mm">
+            <h6 style="position: absolute;bottom: 2mm;">
+                {!shipment.clofor_com_cfs__CARGO_TYPE__c}
+            </h6>
+        </div>
+        <div style="position: absolute;height: 23mm;width: 34mm;left: 146mm;top: 83mm;">
+            <h6 style="position: absolute;top: 1mm;left: 0.5mm;">
+                <apex:outputText value="{0,date,dd-MMM-yyyy}">
+                        <apex:param value="{!shipment.clofor_com_cfs__ETD__c}" />
+                    </apex:outputText>
+            </h6>
+
+            <h6 style="position: absolute;top: 7mm;left: 0.5mm;">
+                {!shipment.Load_type__c}
+            </h6>
+        </div>
+        <div style="position: absolute;height: 72mm;width: 28mm;left: 6mm;top: 102mm;">
+            <h6 style="position: absolute;top: 4mm;left: 0mm;">
+                {!shipment.clofor_com_cfs__Marks_and_Numbers__c}123123
+            </h6>
+        </div>
+        <div style="position: absolute;height: 72mm;width: 15mm;left: 48mm;top: 102mm;">
+            <h6 style="position: absolute;top: 4mm;left: 2mm;">
+                {!shipment.clofor_com_cfs__carton__c} {!shipment.clofor_com_cfs__UnitType__c}
+            </h6>
+        </div>
+        <div style="position: absolute;bottom: -79mm;height: 72mm;width: 70mm;left: 60mm;top: 102mm;">
+            <h6 style="position: absolute;top: 4mm;left: 0mm;">
+                {!shipment.clofor_com_cfs__Item__c}
+            </h6>
+
+            <div style="position: absolute;height: 72mm;width: 17mm;left: 86mm;">
+                <h6 style="position: absolute;top: 4mm;left: 5mm;">
+                    {!shipment.clofor_com_cfs__weight__c}
+                </h6>
+            </div>
+            <div style="position: absolute;height: 72mm;width: 17mm;left: 107mm;">
+                <h6 style="position: absolute;top: 4mm;left: 7mm;">
+                    {!shipment.clofor_com_cfs__CBM__c}
+                </h6>
+            </div>
+            <!-- <div style="position: absolute;height: 12mm;width: 28mm;left: 69mm;top: 93mm;">
+                <h6 style="position: absolute;left: 1mm;top: -3mm;">
+                    <apex:outputText value="{0,date,dd-MMM-yyyy}">
+                        <apex:param value="{!prindate}" />
+                    </apex:outputText>
+                </h6>
+                <h6 style="position: absolute;left: 1mm;">
+                    Phnom Penh, Cambodia
+                </h6>
+            </div> -->
+        </div>
+        
+        
+    </body>
+</apex:page>

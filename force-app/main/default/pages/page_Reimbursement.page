@@ -1,0 +1,637 @@
+<apex:page standardStylesheets="false" controller="ReimbursementController" contentType="text/html" showHeader="false" applyHtmlTag="false" applyBodyTag="false"
+    docType="html-5.0" renderAs="pdf">
+    <!-- <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    </html> -->
+
+    <head>
+        
+        <style  type="text/css" media="all">
+         @page {
+                /* size: A4;
+                margin: 5mm; */
+                size: A4;  
+                margin-left: 1.5cm;      
+                margin-right: 1.5cm;
+                margin-top: 0.5cm;
+                margin-bottom: : 1.5cm;
+                @bottom-center{
+                content: element(footer);
+                
+            }
+            }   
+            @media print{
+            		.no-print{
+            				display: none;
+            			}
+                        .table-striped tr:nth-child(even){
+                            background-color: rgb(255, 0, 0) !important;
+                            -webkit-print-color-adjust: exact;
+                }
+            	@page {
+                    
+                }
+				}
+                body{
+                font-family: "Arial", sans-serif;
+                /* font-family: "Roboto", sans-serif; */
+                /* font-family: "Gill Sans", sans-serif; */
+                font-size: 10px;
+                /* text-transform: uppercase; */
+            } 
+            .first_border{
+                border-bottom: 1px solid black;
+                border-right: 1px solid black;
+                border-top: 1px solid black;
+                border-left: 1px solid black;
+            }
+            .table-striped tr:nth-child(even){
+                background-color: rgb(255, 0, 0) !important;
+                -webkit-print-color-adjust: exact;
+            }
+            table.table-striped thead tr:first-child{
+                font-weight: bolder;
+                background-color: rgb(114, 114, 114);
+            }
+            table.info td:first-child{
+                font-weight: bold;
+            }
+            /* table.table-striped td{
+                border-bottom: 1px solid rgb(168, 168, 168);
+                border-right: 1px solid rgb(168, 168, 168);
+                border-top: 1px solid rgb(168, 168, 168);
+                border-left: 1px solid rgb(168, 168, 168);
+            } */
+            
+            
+    </style>
+    </head>
+
+    <body>
+        <div style="float: right;font-size: 15px;width: 200px;">
+            <p>KINGDOM OF CAMBODIA
+                <br/> NATION RELIGION KING</p>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div>
+            <p id="test" style="font-size: 24px;text-align: center;font-weight: bolder;color: rgb(42, 42, 255);">
+                REIMBURSEMENT
+            </p>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <!-- s/o -->
+        <div>
+            <table class="info" style="width: 100%">
+                <col width="10%" />
+                <col width="65%" />
+                <col width="10%" />
+                <col width="15%" />
+                <tr>
+                    <td>
+                        <apex:outputText style="font-weight: bold;" value="Bill To:" />
+                    </td>
+                    <td>
+                        <apex:outputText value="{!reim.Invoice_to__r.Name}" />
+                    </td>
+                    <td>
+                        <apex:outputText style="font-weight: bold;float: right;" value="No. :" />
+                    </td>
+                    <td>
+                        <apex:outputText style="float: right;" value="{!reim.Name}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <apex:outputText value="" />
+                    </td>
+                    <td>
+                        <apex:outputText value="{!reim.Invoice_to__r.clofor_com_cfs__EnglishAddress__c}" />
+                    </td>
+                    <td>
+                        <apex:outputText style="font-weight: bold;float: right;" value="Date :" />
+                    </td>
+                    <td>
+                        <apex:outputText style="float: right;" value="{0, date, dd'-'MM'-'yyyy}">
+                            <apex:param value="{!reim.Date_on_Reimbursement_form__c}" />
+                        </apex:outputText>
+                        <!-- <apex:outputText value="{!reim.clofor_com_cfs__PrintDate__c}"/> -->
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <apex:outputText value="" />
+                    </td>
+                    <td>
+                        <apex:outputText value="Tel :{!reim.Invoice_to__r.Phone}" rendered="{!reim.Invoice_to__r.Phone != null}"/>
+                        <apex:outputText style="padding-left: 10px;" value="Fax :{!reim.Invoice_to__r.Fax}" rendered="{!reim.Invoice_to__r.Fax != null}"/>
+                    </td>
+                    <td>
+                        <apex:outputText style="font-weight: bold;float: right;" value="File No :" />
+                    </td>
+                    <td>
+                        <apex:outputText style="float: right;" value="{!reim.File_No__c}" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <!-- bill -->
+        <div>
+            <table class="table-striped" style="width: 100%;border-collapse: collapse;">
+
+                <col width="55%" />
+                <col width="15%" />
+                <col width="15%" />
+                <col width="15%" />
+                <thead style="outline: 1px solid black; text-align: center">
+                    <tr>
+                        <td style="outline: 1px solid black;color: white;" class="first_border">
+                            <apex:outputText value="Description" />
+                        </td>
+                        <td style="outline: 1px solid black;color: white;" class="first_border">
+                            <apex:outputText value="Qty" />
+                        </td>
+                        <td style="outline: 1px solid black;color: white;" class="first_border">
+                            <apex:outputText value="Rate" />
+                        </td>
+                        <td style="outline: 1px solid black;color: white;" class="first_border">
+                            <apex:outputText value="Amount" />
+                        </td>
+                    </tr>
+                </thead>
+                <apex:variable value="{!1}" var="count"/>
+                <apex:repeat value="{!listbill}" var="bill">
+                    
+                    <tr>
+                        <td>
+                            <apex:outputText value="{!bill.clofor_com_cfs__BillNameAtPrintENG__c}" />
+                        </td>
+                        <td style="text-align: center">
+                            <apex:outputText value="{0,number,###,###,###,###}">
+                                <apex:param value="{!bill.clofor_com_cfs__Suryo__c}" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!bill.clofor_com_cfs__Suryo__c}"/> -->
+                        </td>
+                        <td style="text-align: right">
+                            <apex:outputText value="{0,number,###,###,###,###.00}">
+                                <apex:param value="{!bill.clofor_com_cfs__SellTankaUSD__c}" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!bill.clofor_com_cfs__SellTankaUSD__c}"/> -->
+                        </td>
+                        <td>
+                            <apex:outputText style="float: right" value="{0,number,###,###,###,###.00}" rendered="{!bill.AmountSellingIncludingTaxFCY__c != 0}">
+                                <apex:param value="{!bill.AmountSellingIncludingTaxFCY__c}" />
+                            </apex:outputText>
+                            <apex:outputText style="float: right" value="-" rendered="{!bill.AmountSellingIncludingTaxFCY__c == 0}" />
+
+                            <!-- <apex:outputText value="{!bill.clofor_com_cfs__SellAmountUSD__c}"/> -->
+                        </td>
+
+                    </tr>
+                    <apex:variable value="{!count+1}" var="count"/>
+                </apex:repeat>
+                <apex:variable value="{!1}" var="co"/>
+                <apex:repeat value="{!arrResult}" var="temp">
+                    <apex:variable value="{!co+1}" var="co"/>
+                    <tr style="height : 15px;">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    
+                </apex:repeat>
+            </table>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div style="width: 100%">
+            <div style="width: 100%">
+                <div style="float: right;">
+                    <div>
+                        <apex:outputText style="padding-right: 100px; font-weight: bold;text-decoration: underline;font-size: 11px;" value="Total: "
+                        />
+                        <apex:outputText value="{!reim.Currency__c} "/>
+                        <apex:outputText value="{0,number,###,###,###,###.00}">
+                            <apex:param value="{!reim.Total_Amount__c}" />
+                        </apex:outputText>
+                        <!-- <apex:outputText value="{!SumAmount}"/> -->
+                    </div>
+                </div>
+                <p style="width: 50%;">
+                    If any disagreement is not addressed within 2days of the receipt of this document, it will be considered as accepted
+                </p>
+                
+            </div>
+            
+        </div>
+        <!-- remark -->
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <!-- Master bill details -->
+        <apex:outputPanel rendered="{!InformationDisplay == 'HOUSE'}">
+            <div>
+                <p style="font-size: 13px;font-weight: bold;">REMARK:</p>
+                <table class="info" style="width: 70%">
+                    <col width="20%" />
+                    <col width="80%" />
+                    <tr>
+                        <td>
+                            <apex:outputText value="BL No. : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{!reim.HBL_HAWB_No__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <apex:outputText value="SHIPPER : " />
+                        </td>
+                        <td>
+                            <apex:outputText escape="false" value="{!reim.shipper_formula__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="CONSIGNEE : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{!reim.HConsignee__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="ETA : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, date, dd'-'MM'-'yyyy}">
+                                <apex:param value="{!reim.H_ETA__c}" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!reim.clofor_com_cfs__ETA__c}"/> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="COMMODITY : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{!reim.Descriptionofgoods_Text__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="WEIGHT : " />
+                        </td>
+                        <td>
+                            <apex:outputText style="{!IF(reim.HGrossWeight__c != 0,'','display: none;')}" value="{0,number,###,###,###,###}Kgs">
+                                <apex:param value="{!reim.HGrossWeight__c}" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!reim.clofor_com_cfs__weight__c}"/> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="VOLUME : " />
+                        </td>
+                        <td>
+                            <apex:outputText style="{!IF(reim.H_Measurement_Total_CBM__c != 0,'','display: none;')}" value="{0,number,###,###,###,###.00} CBM">
+                                <apex:param value="{!reim.H_Measurement_Total_CBM__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="ETD : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, date, dd'-'MM'-'yyyy}">
+                                <apex:param value="{!reim.H_ETD__c}" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!reim.clofor_com_cfs__ETD__c}"/> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="Q'TY : " />
+                        </td>
+                        <td>
+    
+                            <apex:outputPanel rendered="{!reim.HCargoQuantity__c != 0}">
+                                <!-- <apex:outputText value=": {!reim.clofor_com_cfs__carton__c} {!reim.clofor_com_cfs__UnitType__c}s" rendered="{!reim.clofor_com_cfs__carton__c != 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                            <div>
+                                <apex:outputText value="{0,number,###,###,###,###} " rendered="{!reim.HCargoQuantity__c != 1 && reim.HCargoQuantity__c != null}">
+                                    <apex:param value="{!reim.HCargoQuantity__c}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!reim.clofor_com_cfs__carton__c} " rendered="{!reim.clofor_com_cfs__carton__c != 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                                <apex:outputText value="{!reim.HCargoUnit__c}s" rendered="{!reim.HCargoQuantity__c != 1 && reim.HCargoQuantity__c != null}"/>
+                            </div>
+                            <!-- <apex:outputText value=": {!reim.clofor_com_cfs__carton__c} {!reim.clofor_com_cfs__UnitType__c}" rendered="{!reim.clofor_com_cfs__carton__c == 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                            <div>
+                                <apex:outputText value="{0,number,###,###,###,###} " rendered="{!reim.HCargoQuantity__c == 1 && reim.HCargoQuantity__c != null}">
+                                    <apex:param value="{!reim.HCargoQuantity__c}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!reim.clofor_com_cfs__carton__c} " rendered="{!reim.clofor_com_cfs__carton__c == 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                                <apex:outputText value="{!reim.HCargoUnit__c}" rendered="{!reim.HCargoQuantity__c == 1 && reim.HCargoQuantity__c != null}"/>
+                            </div>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="POL/POD : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{!reim.H_P_O_D_A_O_A__c} / {!reim.H_P_O_L_A_O_D__c}"
+                            />
+                            
+                        </td>
+                    </tr>
+                    <apex:repeat value="{!listcon}" var="con">
+                        <tr>
+                            <td colspan="2">
+                                <apex:outputText style="font-weight: normal" value="{!con.clofor_com_cfs__Container_NO__c} " />
+                                <apex:outputText style="font-weight: normal" value="/{!con.clofor_com_cfs__Container__c} " />
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                    <tr>
+                        <td>
+                            <apex:outputText value="Border : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{!reim.Border__c}"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </apex:outputPanel>
+        <!-- House bill details -->
+        <apex:outputPanel rendered="{!InformationDisplay == 'MASTER'}">
+            <div>
+                <p style="font-size: 13px;font-weight: bold;">REMARK:</p>
+                <table class="info" style="width: 70%">
+                    <col width="20%" />
+                    <col width="80%" />
+                    <tr>
+                        <td>
+                            <apex:outputText value="BL No. : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{!reim.MBLMAWB_No__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <apex:outputText value="SHIPPER : " />
+                        </td>
+                        <td>
+                            <apex:outputText escape="false" value="{!reim.MShipper__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="CONSIGNEE : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{!reim.MConsignee__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="ETA : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, date, dd'-'MM'-'yyyy}">
+                                <apex:param value="{!reim.M_ETA__c}" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!reim.clofor_com_cfs__ETA__c}"/> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="COMMODITY : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{!reim.M_Commodity__c}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="WEIGHT : " />
+                        </td>
+                        <td>
+                            <apex:outputText style="{!IF(reim.Gross_Weight__c != 0,'','display: none;')}" value="{0,number,###,###,###,###}Kgs">
+                                <apex:param value="{!reim.Gross_Weight__c}" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!reim.clofor_com_cfs__weight__c}"/> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="VOLUME : " />
+                        </td>
+                        <td>
+                            <apex:outputText style="{!IF(reim.MMeasurement_Total_CBM__c != 0,'','display: none;')}" value="{0,number,###,###,###,###.00} CBM">
+                                <apex:param value="{!reim.MMeasurement_Total_CBM__c}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="ETD : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, date, dd'-'MM'-'yyyy}">
+                                <apex:param value="{!reim.M_ETD__c}" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!reim.clofor_com_cfs__ETD__c}"/> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="Q'TY : " />
+                        </td>
+                        <td>
+    
+                            <apex:outputPanel rendered="{!reim.MCargo_Quantity__c != 0}">
+                                <!-- <apex:outputText value=": {!reim.clofor_com_cfs__carton__c} {!reim.clofor_com_cfs__UnitType__c}s" rendered="{!reim.clofor_com_cfs__carton__c != 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                            <div>
+                                <apex:outputText value="{0,number,###,###,###,###} " rendered="{!reim.MCargo_Quantity__c != 1 && reim.MCargo_Quantity__c != null}">
+                                    <apex:param value="{!reim.MCargo_Quantity__c}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!reim.clofor_com_cfs__carton__c} " rendered="{!reim.clofor_com_cfs__carton__c != 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                                <apex:outputText value="{!reim.MCargoUnit__c}s" rendered="{!reim.MCargo_Quantity__c != 1 && reim.MCargo_Quantity__c != null}"/>
+                            </div>
+                            <!-- <apex:outputText value=": {!reim.clofor_com_cfs__carton__c} {!reim.clofor_com_cfs__UnitType__c}" rendered="{!reim.clofor_com_cfs__carton__c == 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                            <div>
+                                <apex:outputText value="{0,number,###,###,###,###} " rendered="{!reim.MCargo_Quantity__c == 1 && reim.MCargo_Quantity__c != null}">
+                                    <apex:param value="{!reim.MCargo_Quantity__c}"/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!reim.clofor_com_cfs__carton__c} " rendered="{!reim.clofor_com_cfs__carton__c == 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                                <apex:outputText value="{!reim.MCargoUnit__c}" rendered="{!reim.MCargo_Quantity__c == 1 && reim.MCargo_Quantity__c != null}"/>
+                            </div>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="POL/POD : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{!reim.P_O_D_A_O_A__c} / {!reim.P_O_L_A_O_D__c}"
+                            />
+                            
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </apex:outputPanel>
+        <!-- None -->
+        <apex:outputPanel rendered="{!InformationDisplay == 'NONE'}"> 
+            <div>
+                <p style="font-size: 13px;font-weight: bold;">REMARK:</p>
+                <table class="info" style="width: 70%">
+                    <col width="20%" />
+                    <col width="80%" />
+                    <tr>
+                        <td>
+                            <apex:outputText value="BL No. : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <apex:outputText value="SHIPPER : " />
+                        </td>
+                        <td>
+                            <apex:outputText escape="false" value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="CONSIGNEE : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="ETA : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, date, dd'-'MM'-'yyyy}">
+                                <apex:param value="" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!reim.clofor_com_cfs__ETA__c}"/> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="COMMODITY : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="WEIGHT : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{0,number,###,###,###,###}">
+                                <apex:param value="" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!reim.clofor_com_cfs__weight__c}"/> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="VOLUME : " />
+                        </td>
+                        <td>
+                            <apex:outputText style="{!IF(reim.H_Measurement_Total_CBM__c != null || reim.H_Measurement_Total_CBM__c != 0,'','display: none;')}" value="{0,number,###,###,###,###.00}">
+                                <apex:param value=""/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="ETD : " />
+                        </td>
+                        <td>
+                            <apex:outputText value="{0, date, dd'-'MM'-'yyyy}">
+                                <apex:param value="" />
+                            </apex:outputText>
+                            <!-- <apex:outputText value="{!reim.clofor_com_cfs__ETD__c}"/> -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="Q'TY : " />
+                        </td>
+                        <td>
+    
+                            <!-- <apex:outputText value=": {!reim.clofor_com_cfs__carton__c} {!reim.clofor_com_cfs__UnitType__c}s" rendered="{!reim.clofor_com_cfs__carton__c != 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                            <div>
+                                <apex:outputText value="{0,number,###,###,###,###} " rendered="{!reim.MCargo_Quantity__c != 1 && reim.MCargo_Quantity__c != null}">
+                                    <apex:param value=""/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!reim.clofor_com_cfs__carton__c} " rendered="{!reim.clofor_com_cfs__carton__c != 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                                <apex:outputText value="" rendered="{!reim.MCargo_Quantity__c != 1 && reim.MCargo_Quantity__c != null}"/>
+                            </div>
+                            <!-- <apex:outputText value=": {!reim.clofor_com_cfs__carton__c} {!reim.clofor_com_cfs__UnitType__c}" rendered="{!reim.clofor_com_cfs__carton__c == 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                            <div>
+                                <apex:outputText value="{0,number,###,###,###,###} " rendered="{!reim.MCargo_Quantity__c == 1 && reim.MCargo_Quantity__c != null}">
+                                    <apex:param value=""/>
+                                </apex:outputText>
+                                <!-- <apex:outputText value="{!reim.clofor_com_cfs__carton__c} " rendered="{!reim.clofor_com_cfs__carton__c == 1 && reim.clofor_com_cfs__carton__c != null}"/> -->
+                                <apex:outputText value="" rendered="{!reim.MCargo_Quantity__c == 1 && reim.MCargo_Quantity__c != null}"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <apex:outputText value="POL/POD : " />
+                        </td>
+                        <td>
+                            <apex:outputText value=""
+                            />
+                            
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </apex:outputPanel>
+        <div style="float: right; text-align: center">
+            <apex:outputText value="------------------------------------------------" />
+            
+            <p>
+                Authorized Signature
+            </p>
+        </div>
+    </body>
+</apex:page>

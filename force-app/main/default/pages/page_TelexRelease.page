@@ -1,0 +1,149 @@
+<apex:page controller="TelexReleaseController" contentType="text/html" showHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+</html>
+<head>
+    <style>
+        @page {    
+            size: A4;
+            margin-left: 50px;      
+            margin-right: 50px;
+            height:100%;
+            /* @bottom-center{ */
+            /* content: element(footer); */
+           
+                @bottom-center {
+                    content: element(footer);
+                }
+            }
+        body{
+            font-size: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            }
+            table td{
+                padding: 15px 0;
+            }
+            /* table tr td:first-child {
+                font-weight: bold;
+            }
+            table tr th:nth-child(3) {
+                font-weight: bold;
+            } */
+            #footer {
+                position:fixed;
+                padding-bottom: 10px;
+                width:100%;
+                height:60px; 
+                background:#6cf;
+            }
+            div.footer {
+                display: block;
+                position: running(footer);
+            }
+    </style>
+
+</head>
+<body>
+    <div>
+        <img src="https://swift-freight-logistics--swift01.sandbox.file.force.com/servlet/servlet.FileDownload?file=0151y000000akiB" width="180px" height="40px"/>
+    </div>
+    <div>
+        <p style="text-align: center; font-size:24px;text-decoration: underline;">Telex Release</p>
+    </div>
+    <!-- <div style="display: flex;padding: 9px 0;">
+        <apex:outputText style="font-weight: bold" value="To : "/>
+        <apex:outputField style="white-space: pre-line;" value="{!shipment.clofor_com_cfs__CNEE_ADDRESS_ON_B_L__c}"/>
+    </div> -->
+    <div >
+        <table border="1px;" style="border-collapse: collapse; width: 100%; font-size: 15px;">
+                <col width="25%"/>
+                <col width="75%"/>
+            <tr>
+                <td style="border:hidden;">
+                    <apex:outputText value="Date :"/>
+                </td>
+                <td style="border:hidden;"><apex:outputText value="{0,date, dd-MMM-yyyy}">
+                    <apex:param value="{!shipment.clofor_com_cfs__SalesAccountedDate__c}" /> 
+                        </apex:outputText>
+                </td>
+            </tr>
+            <tr>
+                <td style="border:hidden;">
+                    <apex:outputText value="To :"/>
+                </td>
+                <td style="border:hidden;">
+                    <apex:outputText value="WHOM IT MAY CONCERN"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="border: hidden;">
+                    <apex:outputText value="From :"/>
+                </td>
+                <td style="border: hidden;">
+                    <apex:outputText value="SWIFT FREIGHT LOGISTICS LTD."/>
+                </td>
+            </tr>
+            <tr>
+                <td style="border-left:hidden; border-right: hidden; border-bottom: hidden;">
+                    <apex:outputText value="Consignee :"/>
+                </td>
+                <td style="border-left:hidden; border-right: hidden; border-bottom: hidden;">
+                    <apex:outputText value="{!shipment.clofor_com_cfs__Cnee__r.Name}"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="border: hidden;">
+                    <apex:outputText value="Vessel / Voy No. :"/>
+                </td>
+                <td style="border: hidden;">
+                    <apex:outputText value="{!shipment.clofor_com_cfs__Vessle__c }"/> /
+                    <apex:outputText value="{!shipment.clofor_com_cfs__Voy_No__c}"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="border: hidden;">
+                    <apex:outputText value="House B/L No. :"/>
+                </td>
+                <td style="border: hidden;">
+                    <apex:outputText value="{!shipment.clofor_com_cfs__HBL__c}"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <p style="font-size: 13px; font-weight: normal">Please be advise that full set of above shipment has surrendered at our Phnom Penh Office.</p>
+        <p  style="font-size: 13px; font-weight: normal">So, please release cargo to consignee without presentation of Original Bill of Lading.</p>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div>
+        <p style="font-size: 13px; font-weight: normal">Thank you for your kind co-operation.</p>
+    </div>
+    <div style="position:absolute; left:500px; top: 720px; font-size: 15px;">
+        <b>Signature</b>
+    </div>
+    <div style="position:absolute; left:440px; top: 830px; font-size: 15px;">
+        ......................................................
+    </div>
+    <div style="position:absolute; left:495px; top: 850px; font-size: 15px;">
+        <b>Best regards,</b>
+    </div>
+    <!-- <footer id="footer">
+        <div style="vertical-align: bottom">
+            SWIFT FREIGHT LOGISTICS LTD.<br/>
+            Office Address : Plot 61, Street 570-331, Sangkat Boeung Kok II, Phnom Penh, Cambodia. TEL : +855 23 982 228. VAT No. : K005-107005891
+        </div>
+    </footer> -->
+    <div class="footer" style="clear:both; width: 1800px;">
+        <div class="footerleft" style="width: 45%;">
+            <div>
+                SWIFT FREIGHT LOGISTICS LTD.<br/>
+                Office Address : Plot 61, Street 570-331, Sangkat Boeung Kok II, Phnom Penh, Cambodia. TEL : +855 23 982 228. VAT No. : K005-107005891
+            </div>
+        </div>
+    </div>
+</body>
+</apex:page>

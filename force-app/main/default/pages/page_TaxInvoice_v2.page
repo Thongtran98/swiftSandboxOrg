@@ -1,0 +1,736 @@
+<apex:page controller="TaxInvoiceController_v2">
+    <head>
+        <style>
+            @font-face {
+                font-family: "khmer-muollight";
+                src: url("{!URLFOR($Resource.KhmerFont, 'KhmerOS_muollight.ttf')}").format('truetype');
+            }
+            @font-face {
+                font-family: "khmer-siemreap";
+                src: url("{!URLFOR($Resource.KhmerFont, 'KhmerOS_siemreap.ttf')}").format('truetype');
+            }
+            @font-face {
+                font-family: "khmer-content";
+                src: url("{!URLFOR($Resource.KhmerFont, 'KhmerOS_content.ttf')}").format('truetype');
+            }
+            @media print {
+                .table-striped tr:not(.not-stripe):nth-child(even){
+                    background-color: #e3dddb !important;
+                    -webkit-print-color-adjust: exact;
+                }
+                #mydiv{
+                    display: none;
+                }
+            }
+            .table-striped tr:not(.not-stripe):nth-child(even){
+                background-color: #e3dddb;
+            }
+            #mydiv {
+                position: fixed;
+                z-index: 9;
+                background-color: #f1f1f1;
+                border: 1px solid #d3d3d3;
+                text-align: center;
+            }
+
+            #mydivheader {
+                padding: 10px;
+                cursor: move;
+                z-index: 10;
+                background-color: #2168a2;
+                color: #fff;
+            }
+            #print-btn{
+                display: block;
+                width: 100%;
+                padding: 6px 0;
+                font-size: 18px;
+                box-shadow: none; 
+                background-color: white; 
+                border: none; 
+                cursor: pointer;
+            }
+            #print-btn:hover{
+                background-color: rgb(232, 232, 232);
+                text-decoration: none;
+                color: black;
+            }
+        </style>
+    </head>
+    <div id="mydiv">
+        <!-- Include a header DIV with the same name as the draggable DIV, followed by "header" -->
+        <div id="mydivheader">Click here to move</div>
+        
+        <a id="print-btn" type="button" onclick="window.print()">PRINT</a>
+    </div>
+    <div>
+
+        <div style="text-align: end; ">
+            <h2 style="font-size: 10.08px; font-family: khmer-muollight;">
+                <b>ស្វីសហ្វ​ ​​​​​​​ហ្វ្រេត ​​​​​​​​​​​ឡូជីស្ទីក</b>
+            </h2>
+            <p style="font-family: khmer-siemreap; font-size: 6.96px;">លេខអត្តសញ្ញាណកម្ម អតប (VATTIN): K005-107005891</p>
+            <p style="font-family: khmer-siemreap; font-size: 6.96px;">អាសយដ្ឋាន​ ផ្ទះ​ ​​​ 61​ ​ផ្លូវ​ ​ ​570-331 សង្កាត់បឹងកក់ទីពីរ​  ខណ្ឌទួលគោក  ក្រុងភ្នំពេញ</p>
+            <p style="font-family: khmer-siemreap; font-size: 6.96px;">ទូរស័ព្ទលេខ +855 23 982 228 +855 23 885 159</p>
+        </div>
+        <div style="text-align: center">
+            <h1 style="font-size: 13px; font-weight: bolder; font-family: khmer-content;">
+                វិក្កយបត្រអាករ
+            </h1>
+            <p style="text-decoration: underline; font-size: 10.08px; font-family: Arial;">TAX INVOICE</p>
+        </div>
+        <table style="width: 100%">
+            <tbody>
+                <tr>
+                    <td>
+                        <b style="font-family: khmer-siemreap; font-size: 6.96px;">ឈ្មោះក្រុមហ៊ុន​ ឬអតិថិជន:</b> <span style="font-family: khmer-content; font-size: 10px">{!vat.clofor_com_cfs__VAT_INVOICE_TO__r.ACCOUNT_NAME_Khmer__c}</span></td>
+                    <td>
+                        <!-- <b style="font-family: khmer-siemreap; font-size: 6.96px;">លេខរៀងវិក្កយបត្រ:</b> <span style="font-family: Arial; font-size: 7.92px;">{!vat.clofor_com_cfs__RED_INVOICE_NO__c}</span> -->
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-family: Arial; font-size: 7.92px">Company Name / Customer : {!vat.clofor_com_cfs__VAT_INVOICE_TO__r.Name}</td>
+                    <td style="font-family: Arial; font-size: 7.92px">Invoice No. / ឈ្មោះក្រុមហ៊ុន​ ឬអតិថិជន: {!vat.clofor_com_cfs__RED_INVOICE_NO__c}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <b style="font-family: Arial; font-size: 7.92px">អាស័យដ្ឋាន:</b> <span style="font-family: Arial; font-size: 6px">{!vat.clofor_com_cfs__VAT_INVOICE_TO__r.Khmer_Address__c}</span>
+                    </td>
+                    <td >
+                        <!-- <b style="font-family: khmer-siemreap; font-size: 6.96px;">កាលបរិច្ឆេទ:</b>
+                        <apex:outputText value="{0,date,dd'/'MM'/'yyyy}" style="font-family: Arial; font-size: 7.92px">
+                            <apex:param value="{!vat.clofor_com_cfs__VATInvoicePrintDate__c}" /> 
+                        </apex:outputText> -->
+                        
+                    </td>
+
+                </tr>
+                <tr>
+                    <td style="font-family: Arial; font-size: 7.92px">Address : {!vat.clofor_com_cfs__VAT_INVOICE_TO__r.clofor_com_cfs__EnglishAddress__c}</td>
+                    <td style="font-family: Arial; font-size: 7.92px">Date / កាលបរិច្ឆេទ: 
+                        <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+                            <apex:param value="{!vat.clofor_com_cfs__VATInvoicePrintDate__c}" /> 
+                        </apex:outputText>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            <b><span style="font-family: khmer-siemreap; font-size: 6.96px;">លេខអត្តសញ្ញាណកម្ម អតប</span>​ (VATTIN) : L001-107016567</b>
+        </p>
+        <table class="table-striped" style="width: 100%; margin-bottom: auto;">
+            <thead style="outline: 2px solid black; text-align: center;">
+                <tr>
+                    <td style="border-right: 2px solid black; width:4%;">
+                        <div style="display: flex; flex-direction: column; padding: 4px 0;">
+                            <b style="font-family: khmer-siemreap; font-size: 6.96px;">ល.រ</b>
+                            <span style="font-family: Arial; font-size: 7.92px">N°</span>
+                        </div>
+                    </td>
+                    <td style="border-right: 2px solid black;">
+                        <div style="display: flex; flex-direction: column; padding: 4px 0;">
+                            <b style="font-family: khmer-siemreap; font-size: 6.96px;">បរិយាយមុខទំនិញ</b>
+                            <span style="font-family: Arial; font-size: 7.92px">Description</span>
+                        </div>
+                    </td>
+                    <td style="border-right: 2px solid black;">
+                        <div style="display: flex; flex-direction: column; padding: 4px 0;">
+                            <b style="font-family: khmer-siemreap; font-size: 6.96px;">បរិមាណ</b>
+                            <span style="font-family: Arial; font-size: 7.92px">Qty</span>
+                        </div>
+                    </td>
+                    <td style="border-right: 2px solid black;">
+                        <div style="display: flex; flex-direction: column; padding: 4px 0;">
+                            <b style="font-family: khmer-siemreap; font-size: 6.96px;">ថ្លៃឯកតា</b>
+                            <span style="font-family: Arial; font-size: 7.92px">Rate</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; flex-direction: column; padding: 4px 0;">
+                            <b style="font-family: khmer-siemreap; font-size: 6.96px;">ថ្លៃទំនិញ</b>
+                            <span style="font-family: Arial; font-size: 7.92px">Amount</span>
+                        </div>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <apex:variable var="index" value="{!1}" />
+                <apex:repeat value="{!lstbill}" var="vatBill">
+                    <tr>
+                        <td style="text-align: center; vertical-align: top; font-family: Arial; font-size: 7.92px;">
+                            <span style="padding: 2px;">{!index}</span>
+                        </td>
+                        <td>
+                            <div style="min-height: 11px; padding: 2px; font-family: khmer-content; font-size: 7.92px">{!vatBill.clofor_com_cfs__BillNameAtPrintENG__c}</div>
+                            <div style="min-height: 11px; padding: 2px; font-family: Arial; font-size: 6px;">{!vatBill.clofor_com_cfs__BillNameAtPrintLocal__c}</div>
+                        </td>
+                        <td style="text-align: center; vertical-align: top; font-family: Arial; font-size: 7.92px;">
+                            <span style="min-height: 11px; padding: 2px;">
+                                <apex:outputText value="{0, number,###,###,##0}">
+                                    <apex:param value="{!vatBill.clofor_com_cfs__Suryo__c}" />
+                                </apex:outputText>
+                            </span>
+                        </td>
+                        <td style="vertical-align: top; text-align: end; font-family: Arial; font-size: 7.92px;">
+                            <span style="min-height: 11px; padding: 2px;">
+                                <apex:outputText value="{0, number,###,###,##0.00}">
+                                    <apex:param value="{!vatBill.clofor_com_cfs__SellTankaUSD__c}" />
+                                </apex:outputText>
+                                
+                            </span>
+                        </td>
+                        <td style="vertical-align: top; text-align: end; font-family: Arial; font-size: 7.92px;">
+                            <span style="min-height: 11px; padding: 2px;">
+                                <apex:outputText value="{0, number,###,###,##0.00}">
+                                    <apex:param value="{!vatBill.clofor_com_cfs__SellAmountUSD__c}" />
+                                </apex:outputText>
+                                
+                            </span>
+                        </td>
+                    </tr>
+                    <apex:variable var="index" value="{!index+ 1}" />
+                </apex:repeat>
+                <apex:repeat value="{!minRow}" var="minrow">
+                    <tr class="not-stripe">
+                        <td colspan="5">
+                            <div style="min-height: 11px; padding: 2px"></div>
+                            <div style="min-height: 11px; padding: 2px"></div>
+                        </td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+        <div style="font-family: Arial; font-size: 8.8px;">If any disagreement is not addressed within 2 days of the receipt of this document, it will be
+            considered as accepted</div>
+        <div style="display: flex; justify-content: space-between;">
+            <div>
+                <table>
+                    <tbody>
+                        <!-- <apex:repeat value="{!vatShippingOrderList}" var="vatShippingOrder">
+                            <tr>
+                                <td>
+                                    <div style="min-height: 12px"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; text-decoration: underline; font-family: Arial; font-size: 8.8px; font-weight: bold;">
+                                    <b>FILE NO.:</b>
+                                </td>
+                                <td style="font-family: Arial; font-size: 8.8px; font-weight: bold;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__JobRequestID__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">SHIPPER : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">
+                                    <apex:outputText value="{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__ShipperEnglishCompanyName__c}" escape="false"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">COMMODITY : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__Commodity_Type__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">CONSIGNEE : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__Account_Cnee_Eng_name__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">ETA : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">
+                                    <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+                                        <apex:param value="{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__ETA__c}" /> 
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <apex:outputPanel layout="none" rendered="{!IF(vatShippingOrder.clofor_com_cfs__FORWARDING__r.RecordTypeId == airImportType || vatShippingOrder.clofor_com_cfs__FORWARDING__r.RecordTypeId == airExportType, 'true', 'false')}">
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">AWHB : </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__HAWB__c}</td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">C-WEIGHT ></td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__weight__c} KGS</td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">VOL : </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__CBM__c} CBM</td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">PKGS : </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__carton__c} {!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__UnitType__c}</td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;"></td>
+                                    <td style="font-family: Arial; font-size: 7.92px;"></td>
+                                </tr>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="none" rendered="{!IF((seaImportType != null && vatShippingOrder.clofor_com_cfs__FORWARDING__r.RecordTypeId == seaImportType) || (seaExportType != null && vatShippingOrder.clofor_com_cfs__FORWARDING__r.RecordTypeId == seaExportType) || (oceanImportType != null && vatShippingOrder.clofor_com_cfs__FORWARDING__r.RecordTypeId == oceanImportType) || (oceanExportType != null && vatShippingOrder.clofor_com_cfs__FORWARDING__r.RecordTypeId == oceanExportType), 'true', 'false')}">
+                                <apex:outputPanel layout="none" rendered="{!IF(vatShippingOrder.clofor_com_cfs__FORWARDING__r.Load_type__c == 'FCL/FCL', 'true', 'false')}">
+                                    <apex:repeat value="{!cntrList}" var="cntr">
+                                        <apex:outputPanel layout="none" rendered="{!IF(cntr.clofor_com_cfs__HBL_SHIPMENT__r.Id == vatShippingOrder.clofor_com_cfs__FORWARDING__r.Id, 'true', 'false')}">
+                                            <tr>
+                                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">{!cntr.clofor_com_cfs__Container_NO__c} / {!cntr.clofor_com_cfs__Container__c}</td>
+                                                <td style="font-family: Arial; font-size: 7.92px;"></td>
+                                            </tr>
+                                        </apex:outputPanel>
+                                    </apex:repeat>
+                                    <apex:outputPanel layout="none" rendered="{!IF(vatShippingOrderList.size <= 1, 'true','false')}">
+                                        <apex:repeat value="{!minCntrRow}" var="minrow">
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div style="min-height: 12px"></div>
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                    </apex:outputPanel>
+                                </apex:outputPanel>
+                                <apex:outputPanel layout="none" rendered="{!IF(vatShippingOrder.clofor_com_cfs__FORWARDING__r.Load_type__c == 'LCL/LCL', 'true', 'false')}">
+                                    <apex:repeat value="{!cntrList}" var="cntr">
+                                        <apex:outputPanel layout="none" rendered="{!IF(cntr.clofor_com_cfs__HBL_SHIPMENT__r.Id == vatShippingOrder.clofor_com_cfs__FORWARDING__r.Id, 'true', 'false')}">
+                                            <tr>
+                                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">POL/POD : </td>
+                                                <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__POL__c} / {!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__POD__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">ETD/ETA : </td>
+                                                <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__ETD__c} / {!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__ETA__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">QTY : </td>
+                                                <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__carton__c} {!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__UnitType__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">VOL : </td>
+                                                <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__CBM__c} CBM</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">WEIGHT ></td>
+                                                <td style="font-family: Arial; font-size: 7.92px;">{!vatShippingOrder.clofor_com_cfs__FORWARDING__r.clofor_com_cfs__weight__c} KGS</td>
+                                            </tr>
+                                        </apex:outputPanel>
+                                    </apex:repeat>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                        </apex:repeat> -->
+                        <!-- Master bill details -->
+                        <apex:outputPanel layout="none" rendered="{!InformationDisplay == 'MASTER'}">
+                            <tr>
+                                <td>
+                                    <div style="min-height: 12px"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; text-decoration: underline; font-family: Arial; font-size: 8.8px; font-weight: bold;">
+                                    <b>FILE NO.:</b>
+                                </td>
+                                <td style="font-family: Arial; font-size: 8.8px; font-weight: bold;">{!vat.Master__r.Name}</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">SHIPPER : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">
+                                    {!vat.MShipper__c}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">COMMODITY : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">{!vat.MCommodityType__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">CONSIGNEE : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">{!vat.HConsignee__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">ETA : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">
+                                    
+                                    <apex:outputText value="{0, date, MM'-'dd'-'yyyy}">
+                                        <apex:param value="{!vat.META__c}" />
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <!-- AIR RECORDTYPE -->
+                            <apex:outputPanel layout="none" rendered="{!checkType = true}">
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;"></div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;"></td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">AWHB : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vat.MBLMAWB_No__c}</td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">C.WEIGHT : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vat.MGrossWeight__c}</td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">VOL : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vat.MMeasurementTotalCBM__c}</td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">PKGS : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vat.MCargoQuantity__c} {!vat.MCargoUnit__c}</td>
+                                </tr>
+                            </apex:outputPanel>
+                            <!-- SEA AND ORTHER RECORDTYPE -->
+                            <apex:outputPanel layout="none" rendered="{!checkType = false}">
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">POL/POD : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputText value="{!vat.MPOLAOD__c}"/>
+                                        <apex:outputText value="/" rendered="{!vat.MPODAOA__c != null || vat.MPOLAOD__c != null}"/>
+                                        <apex:outputText value="{!vat.MPODAOA__c}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">ETD/ETA : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputText value="{0, date, dd'-'MMM'-'yyyy}">
+                                            <apex:param value="{!vat.METD__c}" />
+                                        </apex:outputText>
+                                        <apex:outputText value=" /" rendered="{!vat.META__c != null || vat.METD__c != null}"/>
+                                        <apex:outputText value="{0, date, dd'-'MMM'-'yyyy}">
+                                            <apex:param value="{!vat.META__c}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">QTY : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputPanel rendered="{!vat.MCargoQuantity__c == 1}">
+                                            <apex:outputText style="{!IF(vat.MCargoQuantity__c != 0,'','display: none;')}" value="{!vat.MCargoQuantity__c} "/>
+                                            <apex:outputText style="{!IF(vat.MCargoQuantity__c != 0,'','display: none;')}" value="{!vat.MCargoUnit__c}"/>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!vat.MCargoQuantity__c != 1}">
+                                            <apex:outputText style="{!IF(vat.MCargoQuantity__c != 0,'','display: none;')}" value="{!vat.MCargoQuantity__c} "/>
+                                            <apex:outputText style="{!IF(vat.MCargoQuantity__c != 0,'','display: none;')}" value="{!vat.MCargoUnit__c}s"/>
+                                        </apex:outputPanel>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">VOLUME : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputText style="{!IF(vat.MMeasurementTotalCBM__c != 0,'','display: none;')}" value="{!vat.MMeasurementTotalCBM__c} "/>
+                                        <apex:outputText style="{!IF(vat.MMeasurementTotalCBM__c != 0,'','display: none;')}" value="CBM"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">WEIGHT : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputText style="{!IF(vat.MGrossWeight__c != 0,'','display: none;')}" value="{!vat.MGrossWeight__c} "/>
+                                        <apex:outputText style="{!IF(vat.MGrossWeight__c != 0,'','display: none;')}" value="KGS"/>
+                                    </td>
+                                </tr>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                        <!-- House bill details -->
+                        <apex:outputPanel layout="none" rendered="{!InformationDisplay == 'HOUSE'}">
+                            <tr>
+                                <td>
+                                    <div style="min-height: 12px"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; text-decoration: underline; font-family: Arial; font-size: 8.8px; font-weight: bold;">
+                                    <b>FILE NO.:</b>
+                                </td>
+                                <td style="font-family: Arial; font-size: 8.8px; font-weight: bold;">{!vat.Master__r.Name}</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">SHIPPER : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">
+                                    {!vat.HShipper__c}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">COMMODITY : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">{!vat.HCommodityType__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">CONSIGNEE : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">{!vat.HConsignee__c}</td>
+                            </tr>
+                            <tr>
+                                <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">ETA : </td>
+                                <td style="font-family: Arial; font-size: 7.92px;">
+                                    
+                                    <apex:outputText value="{0, date, MM'-'dd'-'yyyy}">
+                                        <apex:param value="{!vat.HETA__c}" />
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <!-- AIR RECORDTYPE -->
+                            <apex:outputPanel layout="none" rendered="{!checkType = true}">
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;"></div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;"></td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">AWHB : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vat.HBLHAWBNo__c}</td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">C.WEIGHT : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vat.HGrossWeight__c}</td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">VOL : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vat.HMeasurementTotalCBM__c}</td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">PKGS : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">{!vat.HCargoQuantity__c} {!vat.HCargoUnit__c}</td>
+                                </tr>
+                            </apex:outputPanel>
+                            <!-- SEA AND ORTHER RECORDTYPE -->
+                            <apex:outputPanel layout="none" rendered="{!checkType = false}">
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">POL/POD : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputText value="{!vat.HPOLAOD__c}"/>
+                                        <apex:outputText value="/" rendered="{!vat.HPODAOA__c != null || vat.HPOLAOD__c != null}"/>
+                                        <apex:outputText value="{!vat.HPODAOA__c}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">ETD/ETA : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputText value="{0, date, dd'-'MMM'-'yyyy}">
+                                            <apex:param value="{!vat.HETD__c}" />
+                                        </apex:outputText>
+                                        <apex:outputText value=" /" rendered="{!vat.HETA__c != null || vat.HETD__c != null}"/>
+                                        <apex:outputText value="{0, date, dd'-'MMM'-'yyyy}">
+                                            <apex:param value="{!vat.HETA__c}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">QTY : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputPanel rendered="{!vat.HCargoQuantity__c == 1}">
+                                            <apex:outputText style="{!IF(vat.HCargoQuantity__c != 0,'','display: none;')}" value="{!vat.HCargoQuantity__c} "/>
+                                            <apex:outputText style="{!IF(vat.HCargoQuantity__c != 0,'','display: none;')}" value="{!vat.HCargoUnit__c}"/>
+                                        </apex:outputPanel>
+                                        <apex:outputPanel rendered="{!vat.HCargoQuantity__c != 1}">
+                                            <apex:outputText style="{!IF(vat.HCargoQuantity__c != 0,'','display: none;')}" value="{!vat.HCargoQuantity__c} "/>
+                                            <apex:outputText style="{!IF(vat.HCargoQuantity__c != 0,'','display: none;')}" value="{!vat.HCargoUnit__c}s"/>
+                                        </apex:outputPanel>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">VOLUME : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputText style="{!IF(vat.HMeasurementTotalCBM__c != 0,'','display: none;')}" value="{!vat.HMeasurementTotalCBM__c} "/>
+                                        <apex:outputText style="{!IF(vat.HMeasurementTotalCBM__c != 0,'','display: none;')}" value="CBM"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">
+                                        <div style="min-height: 11px;">WEIGHT : </div>
+                                    </td>
+                                    <td style="font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputText style="{!IF(vat.HGrossWeight__c != 0,'','display: none;')}" value="{!vat.HGrossWeight__c} "/>
+                                        <apex:outputText style="{!IF(vat.HGrossWeight__c != 0,'','display: none;')}" value="KGS"/>
+                                    </td>
+                                </tr>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                        <tr>
+                            <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">BANK NAME : </td>
+                            <td style="font-family: Arial; font-size: 7.92px;"><apex:outputText value="{!vat.Bank_Account__r.clofor_com_cfs__BankOfficialName__c}"/></td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">ACC NAME : </td>
+                            <td style="font-family: Arial; font-size: 7.92px;"><apex:outputText value="{!vat.Bank_Account__r.clofor_com_cfs__BankAccountNameInEng__c}"/></td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 90px; font-family: Arial; font-size: 7.92px;">ACC NO : </td>
+                            <td style="font-family: Arial; font-size: 7.92px;"><apex:outputText value="{!vat.Bank_Account__r.clofor_com_cfs__BankAccountNumber__c}"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="min-height: 12px"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; flex-direction: column; min-width: 60px;">
+                                    <span style="font-family: khmer-siemreap; font-size: 6.96px;">សរុប</span>
+                                    <span style="font-family: Arial; font-size: 7.92px;">Sub Total</span>
+                                </div>
+                            </td>
+                            <td style="font-family: Arial; font-size: 7.92px;">USD</td>
+                            <td>
+                                <div style="min-width: 100px; text-align: end; font-family: Arial; font-size: 7.92px;">
+                                    <apex:outputText value="{0, number,###,###,##0.00}">
+                                        <apex:param value="{!totalAmount}" />
+                                    </apex:outputText>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; flex-direction: column; min-width: 60px">
+                                    <span style="font-family: khmer-siemreap; font-size: 6.96px;">អាករលើតម្លៃបន្ថែម​ ១០%</span>
+                                    <span style="font-family: Arial; font-size: 7.92px;">VAT 10%</span>
+                                </div>
+                            </td>
+                            <td style="font-family: Arial; font-size: 7.92px;">USD</td>
+                            <td>
+                                <div style="min-width: 100px; text-align: end; font-family: Arial; font-size: 7.92px;">
+                                    <apex:outputText value="{0, number,###,###,##0.00}">
+                                        <apex:param value="{!tenpercentTA}" />
+                                    </apex:outputText>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display: flex; flex-direction: column; min-width: 60px">
+                                    <span style="font-family: khmer-siemreap; font-size: 6.96px;">សរុបរួម</span>
+                                    <span style="font-family: Arial; font-size: 7.92px;">Grand Total</span>
+                                </div>
+                            </td>
+                            <td style="font-family: Arial; font-size: 7.92px;">USD</td>
+                            <td>
+                                <div style="min-width: 100px; text-align: end; font-family: Arial; font-size: 7.92px;">
+                                    <apex:outputText value="{0, number,###,###,##0.00}">
+                                        <apex:param value="{!grandTotal}" />
+                                    </apex:outputText>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="display:flex; min-width: 60px; text-decoration: underline">
+                                    <span style="font-family: Arial; font-size: 7.92px;">1USD = </span>
+                                    <div style="min-width: 30px; margin-left: 6px; font-family: Arial; font-size: 7.92px;">
+                                        <apex:outputText value="{0, number,###,###,##0.00}KHR">
+                                            <apex:param value="{!vat.clofor_com_cfs__ExchangeRate__c}" />
+                                        </apex:outputText>
+                                        
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>
+                                    <span style="font-family: khmer-siemreap; font-size: 6.96px;">ចំនួនទឹកប្រាប់ជារៀល</span>
+                                </div>
+                            </td>
+                            <td style="font-family: Arial; font-size: 7.92px;">KHR</td>
+                            <td>
+                                <div style="min-width: 100px; text-align: end; font-family: Arial; font-size: 7.92px;">
+                                    <apex:outputText value="{0, number,###,###,##0.00}">
+                                        <apex:param value="{!grandTotalExchange}" />
+                                    </apex:outputText>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="width: 100%; display:flex; justify-content: space-between; margin: 150px 0 20px 0">
+            <div style="padding: 0 20px; border-top: 0.5px solid black; display: flex; flex-direction: column;">
+                <b style="font-family: khmer-siemreap; font-size: 6.96px;">ហត្ថលេខា​ និងឈ្មោះអ្នកទិញ</b>
+                <span style="font-family: Arial; font-size: 7.92px;">Customer Signature &amp; Name</span>
+            </div>
+            <div style="padding: 0 20px; border-top: 0.5px solid black; display: flex; flex-direction: column;">
+                <b style="font-family: khmer-siemreap; font-size: 6.96px;">ហត្ថលេខា​ និងឈ្មោះអ្នកលក់</b>
+                <span style="font-family: Arial; font-size: 7.92px;">Seller's Signature &amp; Name</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        dragElement(document.getElementById("mydiv"));
+
+        function dragElement(elmnt) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            if (document.getElementById(elmnt.id + "header")) {
+                // if present, the header is where you move the DIV from:
+                document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+            } else {
+                // otherwise, move the DIV from anywhere inside the DIV:
+                elmnt.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                // stop moving when mouse button is released:
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+    </script>
+</apex:page>

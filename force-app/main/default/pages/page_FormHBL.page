@@ -1,0 +1,224 @@
+<apex:page controller="FormHBLController" contentType="text/html" showHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    </html>
+    <head>
+        <style>
+                body {
+                    padding: 20px;
+                    font-size: 11px;
+                    font-family: "Arial Unicode MS", "MS Pゴシック", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, "メイリオ", Meiryo, "MS PGothic", sans-serif;
+            }
+                .border_bottom{
+                    border-bottom: 1px solid #black;
+                }
+                /* table{
+                    border: 1px solid black;
+                } */
+                .right_bottom_border{
+                    border-bottom: 1px solid black;
+                    border-right: 1px solid black;
+                }
+                .non_border_bottom{
+                    border-bottom: none;
+                }
+                table, td{
+                    vertical-align: top;
+                    /* color: rgb(4 54 104); */
+                }
+    </style>
+
+    </head>
+    <body>
+        <!-- <button class="no-print" onclick="window.print();" style="margin:2mm 2mm 2mm 2mm; text-transform: uppercase; padding:2mm 3mm;font-size:17pt;float:right; background: lightgray; border: 1px solid #b5b5b5; font-weight: normal;">
+                PRINT
+        </button>
+        <br/>
+        <br/> -->
+        <!-- <div style="">
+            <div>
+                <apex:outputText value="BILL FORM"/> 
+            </div>
+            <div style="float: right; padding: 10px;">
+                <apex:outputText style="font-weight: bold;font-size: 14px;" value="BILL OF LADING"/><br/>
+                <apex:outputText style="float: right;" value="ORIGINAL"/>
+            </div>
+        </div>    -->
+        <table style="width: 100%">
+            <tr>
+                <td style="vertical-align: bottom">
+                    <div style="font-size: 14px; color: #ff0000;">
+                        <apex:outputText value="BILL FORM"/> 
+                    </div> 
+                </td>
+                <td style="vertical-align: bottom">
+                    <div style="float: right;">
+                        <apex:outputText style="font-weight: bold;font-size: 14px;color: rgb(4 54 104);" value="BILL OF LADING"/><br/>
+                        <apex:outputText style="float: right;font-size: 9px;color: rgb(4 54 104);" value="ORIGINAL"/>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table border="1" style="font-size: 11px;width: 100%; border-collapse: collapse">
+            <tr>
+                <td class="non_border_bottom" style="">
+                    <apex:outputText style="font-weight: bold;color: rgb(4 54 104);" value="SHIPPER'S NAME AND ADDRESS"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__ADDRESS_ON_B_L__c}"/>    
+                </td>    
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);vertical-align :top;font-weight: bold;" value="B/L NO."/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__HBL_Number_SEA_AIR__c}"/>  
+                </td>
+            </tr>   
+            
+            <tr style="height: 100px;">
+                <td style="border-top: none;">
+
+                </td>
+                <td class="non_border_bottom">
+
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="CONSIGNEE'S NAME AND ADDRESS"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__CNEE_ADDRESS_ON_B_L__c}"/>
+                </td>
+                <td style="border-top: none;">
+
+                </td>
+            </tr>
+
+            <tr>
+                <td class="">
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="NOTIFY PARTY"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__NOTIFY_ADDRESS_ON_B_L__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="FOR DELIVERY OF GOODS PLEASE APPLY TO"/><br/><br/><br/><br/><br/> 
+                    
+                </td>
+            </tr>
+        </table>  
+      
+
+        <table border="1" style="font-size: 11px;width: 100%; border-collapse: collapse;margin-top: 4px;">
+            <tr>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold;" value="VESSEL & Voy.No"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__Vessle__c}"/><br/>
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__Voy_No__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="PORT OF LOADING"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__PortOfLoadingDetailPrint__c}"/>
+                </td>
+                <td colspan="2">
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="FREIGHT AND CHARGE"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__Freight_Collect_Prepaid__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="BOARDED ON"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__ETD__c}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold;vertical-align: top;" value="MTR VESSEL & Voy. No"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.MTR_Vessel_and_Voy_No__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="PORT OF DISCHARGE"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__PortOfDischargeDetailPrint__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="FINAL DESTINATION"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__PlaceOfDeliveryDetailPrint__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="SERVICE TYPE"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__CARGO_TYPE__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="LOAD TYPE"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.Load_type__c}"/>
+                </td>
+            </tr>
+        </table>
+
+        <table border="1" style="width: 100%;border-collapse: collapse;margin-top: 4px;">
+            <tr>
+                <td style="text-align: center;">
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold; text-align: center;" value="PARTICULARS FURNISHED BY SHIPPER"/> 
+                </td>
+            </tr>
+        </table>
+       
+        <table border="1" style="font-size: 11px;width: 100%; border-collapse: collapse;vertical-align: top;">
+            <tr>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold;" value="MARKS & NUMBERS"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__Marks_and_Numbers__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="NO & TYPE OF PACKAGES"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__carton__c}"/>
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__UnitType__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="DESCRIPTION OF PACKAGES GOODS"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__Item__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="GROSS WEIGHT (KG)"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__weight__c}"/>
+                </td>
+                <td>
+                    <apex:outputText style="color: rgb(4 54 104);font-weight: bold" value="VOLUME (CBM)"/><br/><br/>    
+                    <apex:outputField style="color: black" value="{!shipment.clofor_com_cfs__CBM__c}"/>
+                </td>
+            </tr>
+        </table>
+       
+        <table border="1" style="width: 100%; border-collapse: collapse; color: rgb(7 56 106);">
+            <tr>
+                <td style="font-size: 8px;width: 50%">
+                    <apex:outputText value="RECEIVED BY THE CARRIER THE GOODS AS SPECIFIED ABOVE IN APPARENT GOOD ORDER AND CONDITION UNLESS
+                    OTHERWISE STATED, TO BE TRANSPORTED TO SUCH PLACE AS AGREED, AUTHORIZED OR PERMITTED HEREIN AND
+                    REVERSE OF THIS BILL OF LOADING TO WHICH THE MERCHANT AGREES BY ACCEPTING THIS BILL OF LADING, AND
+                    LOCAL PRIVILEGES AND CUSTOMS NOTWITHSTANDING.
+                    
+                    "/><br/><br/>
+                    <apex:outputText value="THE PARTICULAR GIVEN ABOVE AS STATED BY THE SHIPPER AND THE WEIGHT, MEASURE, QUANTITY, CONDITION,
+                    CONTENTS AND VALUE OF THE GOODS ARE UNKNOWN TO THE CARRIER."/><br/><br/>
+                    <apex:outputText value="IN WITNESS, WHEREOF THREE (3) ORIGINAL BILLS OF LADING HAVE BEEN SIGNED IF NOT OTHERWISE STATED
+                    ABOVE, THE SAME BEING ACCOMPLISHED THE OTHER(S) , IF ANY, TO BE VOID, IF REQUIRED BY THE CARRIER, ONE
+                    (1) ORIGINAL BILL OF LADING MUST BE SURRENDERED DULY ENDORSED IN EXCHANGE FOR THE GOODS OF
+                    DELIVERY ORDER."/>
+                </td>
+                <td style="font-size: 11px;width: 50%">
+                    <div style="float: right;padding-top: 60px;">
+                        <apex:outputText value="SWIFT FREIGHT LOGISTICS LTD"/><br/>
+                        <apex:outputText style="float: right;font-size: 7px" value="AS AGENT ONLY"/>
+                    </div>
+                    <div style="padding-top: 30px;float: left;padding-left: 120px;">
+                        <div>
+                            <apex:outputText style="font-size: 9px" value="ISSUED ON"/>
+                            <apex:outputText style="color: black;font-size: 9px;" value=" {0, date, MMM'-'d'-'yyyy}">
+                                <apex:param value="{!prindate}"/>
+                            </apex:outputText>
+                            
+                        </div>  
+                     
+                        <div>
+                            <apex:outputText style="font-size: 9px" value="ISSUED AT"/>
+                            <apex:outputText style="color: black;font-size: 9px;" value=" Phnom Pech, Cambodia"/>
+                        </div>
+                        
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </body>
+</apex:page>

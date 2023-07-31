@@ -1,0 +1,208 @@
+<apex:page controller="FormHBLController" contentType="text/html" showHeader="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" renderAs="pdf">
+<html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+</html>
+<head>
+    <style>
+        @page {    
+            size: A4;
+            margin-left: 50px;      
+            margin-right: 50px;
+            height:100%;
+            /* @bottom-center{ */
+            /* content: element(footer); */
+           
+                @bottom-center {
+                    content: element(footer);
+                }
+            }
+        body{
+            font-size: 10px;
+           
+            }
+            table td{
+                padding: 6px 0;
+            }
+            table tr td:first-child {
+                font-weight: bold;
+            }
+            table tr th:nth-child(3) {
+                font-weight: bold;
+            }
+            #footer {
+                position:fixed;
+                padding-bottom: 10px;
+                width:100%;
+                height:60px; 
+                background:#6cf;
+            }
+            div.footer {
+                display: block;
+                position: running(footer);
+            }
+    </style>
+
+</head>
+<body>
+    <div class="logo">
+        <img src="https://swift-freight-logistics--swift01.sandbox.file.force.com/servlet/servlet.FileDownload?file=0151y000000akiB" width="180px" height="40px"/>
+    </div>
+    <div>
+        <p style="text-align: center; font-size:22px; text-decoration: underline;font-weight: bold;">ARRIVAL NOTICE</p>
+    </div>
+    <div style="display: flex;padding: 9px 0;">
+        <apex:outputText style="font-weight: bold" value="To : "/>
+        <apex:outputField style="white-space: pre-line;" value="{!shipment.clofor_com_cfs__CNEE_ADDRESS_ON_B_L__c}"/>
+    </div>
+    <div class="info">
+        <table style="border-collapse: collapse;width: 100%;">
+                <col width="20%"/>
+                <col width="30%"/>
+                <col width="30%"/>
+                <col width="20%"/>
+            <tr>
+                <td>
+                    <apex:outputText value="HOUSE B/L No. "/>
+                </td>
+                <td>
+                    <apex:outputField value="{!shipment.clofor_com_cfs__HBL_Number_SEA_AIR__c}"/>
+                </td>
+                <th>
+                    <apex:outputText value="DATE "/>
+                </th>
+                <td>
+                    <apex:outputText value="{0,date,dd-MMM-yyyy}">
+                        <apex:param value="{!prindate}" />
+                    </apex:outputText>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <apex:outputText value="MASTER B/L No. "/>
+                </td>
+                <td>
+                    <apex:outputField value="{!shipment.clofor_com_cfs__MBL_Number_SEA_AIR__c}"/>
+                </td>
+                <th>
+                    <apex:outputText value="PLACE OF CLEARENCE "/>
+                </th>
+                <td>
+                    <apex:outputField value="{!CClearance.Place_of_Clearance__c}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <apex:outputText value="PORT OF LOADING "/>
+                </td>
+                <td>
+                    <apex:outputField value="{!shipment.clofor_com_cfs__PortOfLoadingDetailPrint__c}"/>
+                </td>
+                <th>
+                    <apex:outputText value="LOAD TYPE  "/>
+                </th>
+                <td>
+                    <apex:outputField value="{!shipment.Load_type__c}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <apex:outputText value="PORT OF DISCHARGE "/>
+                </td>
+                <td>
+                    <apex:outputField value="{!shipment.clofor_com_cfs__PortOfDischargeDetailPrint__c}"/>
+                </td>
+                <th>
+                    <apex:outputText value="No. OF PACKAGES  "/>
+                </th>
+                <td>
+                    <apex:outputText value="{!shipment.clofor_com_cfs__carton__c } "/>
+                    <apex:outputField value="{!shipment.clofor_com_cfs__UnitType__c}"  rendered="{!shipment.clofor_com_cfs__carton__c != null && shipment.clofor_com_cfs__carton__c == 1}"/>
+                    <apex:outputText value="{!shipment.clofor_com_cfs__UnitType__c}s"  rendered="{!shipment.clofor_com_cfs__carton__c != null && shipment.clofor_com_cfs__carton__c != 1}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <apex:outputText value="DESTINATION "/>
+                </td>
+                <td>
+                    <apex:outputField value="{!shipment.clofor_com_cfs__PlaceOfDeliveryDetailPrint__c}"/>
+                </td>
+                <th>
+                    <apex:outputText value="WEIGHT  "/>
+                </th>
+                <td>
+                    <apex:outputText value="{!shipment.clofor_com_cfs__weight__c} Kgs"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <apex:outputText value="VESSEL / VOY No. "/>
+                </td>
+                <td>
+                    <apex:outputField value="{!shipment.clofor_com_cfs__Vessle__c }"/>
+                    <apex:outputField value="{!shipment.clofor_com_cfs__Voy_No__c}"/>
+                </td>
+                <th>
+                    <apex:outputText value="VOLUME (CBM)  "/>
+                </th>
+                <td>
+                    <apex:outputText value="{!shipment.clofor_com_cfs__CBM__c} M3"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <apex:outputText value="ARRIVAL DATE "/>
+                </td>
+                <td>
+                    <apex:outputText value="{0,date,dd-MMM-yyyy}">
+                        <apex:param value="{!shipment.clofor_com_cfs__ETA__c}"/>
+                    </apex:outputText>
+                    <!-- <apex:outputField value="{!shipment.clofor_com_cfs__ETA__c}"/> -->
+                </td>
+                <th style="vertical-align: top;">
+                    <apex:outputText value="CONTAINER No.  "/>
+                </th>
+                <td>
+                    <apex:outputField value="{!shipment.clofor_com_cfs__CONTAINERSEALNO__c}"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <!-- <p  style="font-size: 13px; font-weight: normal">For {!shipment.clofor_com_cfs__PriceTerms__c} {!shipment.clofor_com_cfs__POD__r.Name}, please kindly pass the document to our {!shipment.clofor_com_cfs__PortOfDischargeDetailPrint__c} office after completed custom clearence.</p> -->
+        <p style="font-size: 13px;">For CIF Phnom Penh, please kindly pass the document to our SIHANOUKVILLE office before 2:00pm after completed custom clearence.</p>
+    </div>
+    <div>
+        <p>1. Storage Charge at USD3.00 / 20'ft and USD6.00 / 40'ft thereafter the 5th day from the vessel complete discharge date<br/>
+            2. Container Demurrage Charge at USD3.00 / 20'ft and USD6.00 / 40'ft thereafter the 7th day from the vessel complete discharge date<br/>
+            3. Container Detention charge at tariff: USD3.00 / 20'ft GP, USD6.00 / 40'ft GP/HC and USD6.00 / 20'ft RF up tp 21st day upon the container delivered from the port. Thereafter on
+            22nd day onwards the rate of USD6.00 / 20'ft GP, USD12.00 / 40'ft GP/HC and USD12.00 / 20'ft RF, USD24.00 / 40'ft RF.<br/>
+            4. For container(s) discharge at Phnom Penh River Port, Container demurrage and detention charges amount will be determined on case-to-case basic depending on carrier decision.
+        </p>
+    </div>
+    <div style="padding: 10px 0">
+        <apex:outputField value="{!shipment.clofor_com_cfs__Remarks__c}"/>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div>
+        <apex:outputText style="font-weight: bold" value="SWIFT FREIGHT LOGISTICS LTD."/>
+    </div>
+    <!-- <footer id="footer">
+        <div style="vertical-align: bottom">
+            SWIFT FREIGHT LOGISTICS LTD.<br/>
+            Office Address : Plot 61, Street 570-331, Sangkat Boeung Kok II, Phnom Penh, Cambodia. TEL : +855 23 982 228. VAT No. : K005-107005891
+        </div>
+    </footer> -->
+    <div class="footer" style="clear:both; width: 1800px;">
+        <div class="footerleft" style="width: 45%;">
+            <div>
+                SWIFT FREIGHT LOGISTICS LTD.<br/>
+                Office Address : Plot 61, Street 570-331, Sangkat Boeung Kok II, Phnom Penh, Cambodia. TEL : +855 23 982 228. VAT No. : K005-107005891
+            </div>
+        </div>
+    </div>
+</body>
+</apex:page>

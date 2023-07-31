@@ -1,0 +1,143 @@
+<aura:component
+  controller="AddMultipleQuoteLineController"
+  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+  access="global"
+>
+  <aura:attribute name="lstObject" type="clofor_com_cfs__QuoteLine__c[]" />
+  <aura:handler name="init" value="{!this}" action="{!c.doinit}" />
+  <lightning:spinner aura:id="spinner" class="slds-hide" />
+  <aura:iteration items="{!v.lstObject}" var="value" indexVar="index">
+            <lightning:recordEditForm
+              class="iteration"
+              aura:id="recordEditForm"
+              objectApiName="clofor_com_cfs__QuoteLine__c"
+            >
+           
+          <div class="slds-grid slds-gutters">
+             <!-- <div class="slds-col slds-gutters_x-small" style="min-width: 8%; max-width: 8%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Printing Section</span>
+              <lightning:inputField
+                  aura:id="field"
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__PrintingSection__c"
+                  value="{!value.clofor_com_cfs__PrintingSection__c}"
+                />
+            </div> -->
+            <div class="slds-col slds-gutters_x-small" style="max-width: 10%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Service Name</span>
+              <lightning:inputField
+                  aura:id="field"
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__ServicePricingID__c"
+                  value="{!value.clofor_com_cfs__ServicePricingID__c}"
+                  
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Print</span>
+                <lightning:input type="checkbox" value="{!value.clofor_com_cfs__Print__c}" checked="{!value.clofor_com_cfs__Print__c}"/>
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Charge Quantity</span>
+                <lightning:inputField
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__Quantity__c"
+                  value="{!value.clofor_com_cfs__Quantity__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small" style="min-width: 7%; max-width: 7%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Charge Unit</span>
+              <lightning:inputField
+                  variant="label-hidden"
+                  fieldName="clofor_com_cfs__Unit__c"
+                  value="{!value.clofor_com_cfs__Unit__c}"
+                  disabled="false"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small" style="min-width: 8%; max-width: 8%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Type</span>
+              <lightning:inputField
+                variant="label-hidden"
+                  fieldName="clofor_com_cfs__ContainerType__c"
+                  value="{!value.clofor_com_cfs__ContainerType__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small" style="min-width: 8%; max-width: 8%;">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Curr-Selling</span>
+                <lightning:inputField
+                variant="label-hidden"
+                  fieldName="clofor_com_cfs__CurrencySelling__c"
+                  value="{!value.clofor_com_cfs__CurrencySelling__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Selling Price (Local)</span>
+                <lightning:inputField
+                variant="label-hidden"
+                  fieldName="clofor_com_cfs__SellingListPriceLocal__c"
+                  value="{!value.clofor_com_cfs__SellingListPriceLocal__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Selling Price (FCY)</span>
+                <lightning:inputField
+                variant="label-hidden"
+                  fieldName="clofor_com_cfs__SellingListPriceUSD__c"
+                  value="{!value.clofor_com_cfs__SellingListPriceUSD__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Tax Rate-Selling (%)</span>
+                <lightning:inputField
+                variant="label-hidden"
+                  fieldName="clofor_com_cfs__TaxRate__c"
+                  value="{!value.clofor_com_cfs__TaxRate__c}"
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Remarks</span>
+                <lightning:inputField
+                variant="label-hidden"
+                  fieldName="clofor_com_cfs__Remarks__c"
+                  value="{!value.clofor_com_cfs__Remarks__c}"
+
+                />
+            </div>
+            <div class="slds-col slds-gutters_x-small">
+              <span style="{!IF(index != 0,'visibility: hidden','')}">Action</span>
+              <div>
+                <a
+                    onclick="{!c.removeRecord}"
+                    data-record="{!index}"
+                  >
+                    <lightning:icon
+                      iconName="utility:delete"
+                      size="small"
+                      alternativeText="Delete"
+                    />
+                    <span class="slds-assistive-text">Delete</span>
+                  </a>
+              </div>
+            </div>
+          </div>
+        </lightning:recordEditForm>
+      </aura:iteration>  
+
+          <div
+            class="slds-align_absolute-center slds-p-top_small"
+            style="padding-top: 150px"
+          >
+            <lightning:button
+              variant="brand"
+              label="Add"
+              title="Brand action"
+              onclick="{!c.addRow}"
+            />
+            <lightning:button
+              variant="brand"
+              label="Submit"
+              title="Brand action"
+              onclick="{!c.saveBills}"
+            />
+          </div>
+</aura:component>
