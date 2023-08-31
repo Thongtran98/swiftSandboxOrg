@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Amount_Buying_Including_Tax_USD_For__c</fullName>
+    <externalId>false</externalId>
+    <formula>if(TEXT(Currency_Buying__c) = &quot;VND&quot;, clofor_com_cfs__AmountBuyingIncludingTaxUSD__c/Exchange_rate_from_VND_to_USD_Buying__c, clofor_com_cfs__AmountBuyingIncludingTaxUSD__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Amount Buying Including Tax(USD)-For</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

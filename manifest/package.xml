@@ -9,8 +9,9 @@
         <name>ApexComponent</name>
     </types>-->
     <types>
-        <members>*</members>
-        <name>ApexPage</name>
+        <members>clofor_com_cfs__MasterAnkenMeisai__c.Amount_Selling_Including_Tax_FCY_For__c</members>
+        <members>clofor_com_cfs__MasterAnkenMeisai__c.Amount_Buying_Including_Tax_USD_For__c</members>
+        <name>CustomField</name>
     </types>
     <!--<types>
         <members>*</members>
