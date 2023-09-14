@@ -19,6 +19,7 @@ The `sfdx-project.json` file contains useful configuration information for your 
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Conflict from main
 =======
 ## Conflict from conflict
@@ -29,6 +30,12 @@ The `sfdx-project.json` file contains useful configuration information for your 
 
 
 >>>>>>> 421f6d3 (v1)
+=======
+
+## Conflict from conflict
+
+
+>>>>>>> b73898ae530edce49e664d895813b9e1aea0e249
 
 
 
