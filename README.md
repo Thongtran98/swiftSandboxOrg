@@ -20,6 +20,7 @@ The `sfdx-project.json` file contains useful configuration information for your 
 
 ## conflict from conflict
 
+## conflict from main
 
 
 
