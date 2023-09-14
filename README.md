@@ -25,7 +25,7 @@ The `sfdx-project.json` file contains useful configuration information for your 
 >>>>>>> 54c5aab (conflict from conflict)
 =======
 
-## Conflict from conflict 2
+## Conflict from conflict 3
 
 
 >>>>>>> 421f6d3 (v1)
