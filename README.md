@@ -18,10 +18,17 @@ The `sfdx-project.json` file contains useful configuration information for your 
 - [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Conflict from main
 =======
 ## Conflict from conflict
 >>>>>>> 54c5aab (conflict from conflict)
+=======
+
+## Conflict from conflict 1
+
+
+>>>>>>> 421f6d3 (v1)
 
 
 
