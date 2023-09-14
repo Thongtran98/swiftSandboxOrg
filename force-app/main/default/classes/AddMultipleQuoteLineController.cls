@@ -15,6 +15,7 @@ public with sharing class AddMultipleQuoteLineController {
                 quoLine.clofor_com_cfs__Unit__c = quoLine.clofor_com_cfs__Unit__c;
                 System.debug('1234:' + quoLine.clofor_com_cfs__Unit__c);
             }
+            
             System.debug('1234:'+numMax);
             quoLine.clofor_com_cfs__QuoteLineNumber__c = Integer.valueOf(Integer.valueOf(numMax)+1);
             numMax++;

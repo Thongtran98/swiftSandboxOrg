@@ -8,7 +8,7 @@
 
           lstObject.push({
             sobjectType: "clofor_com_cfs__QuoteLine__c",
-            clofor_com_cfs__PrintingSection__c: "",
+            //clofor_com_cfs__PrintingSection__c: "",
             clofor_com_cfs__ServicePricingID__c: "",
             clofor_com_cfs__Print__c: true,
             clofor_com_cfs__Quantity__c: "",
@@ -19,6 +19,10 @@
             clofor_com_cfs__SellingListPriceLocal__c: "",
             clofor_com_cfs__SellingListPriceUSD__c: "",
             clofor_com_cfs__BuyTaxInitial__c: "",
+            clofor_com_cfs__CurrencyBuying__c: "",
+            clofor_com_cfs__BuyingListPriceLocal__c: "",
+            clofor_com_cfs__BuyingListPriceUSD__c: "",
+            clofor_com_cfs__TaxRateBuying__c: "",
             clofor_com_cfs__Remarks__c: ""
           });
           component.set("v.lstObject", lstObject);
