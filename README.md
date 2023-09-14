@@ -17,25 +17,10 @@ The `sfdx-project.json` file contains useful configuration information for your 
 - [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
 - [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 ## Conflict from main
-=======
-## Conflict from conflict
->>>>>>> 54c5aab (conflict from conflict)
-=======
-
-## Conflict from conflict 3
 
 
->>>>>>> 421f6d3 (v1)
-=======
-
-## Conflict from conflict
-
-
->>>>>>> b73898ae530edce49e664d895813b9e1aea0e249
 
 
 
