@@ -3,7 +3,7 @@
     <apiVersion>56.0</apiVersion>
     <packageVersions>
         <majorNumber>5</majorNumber>
-        <minorNumber>99</minorNumber>
+        <minorNumber>97</minorNumber>
         <namespace>clofor_com_cfs</namespace>
     </packageVersions>
     <status>Active</status>
